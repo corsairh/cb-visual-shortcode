@@ -51,7 +51,20 @@ class CBVSPluggable extends CBVSPluggableInterface
             $callback
         );
     }
-        
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $callback
+    */
+    public function setVisualizedShortcodesExpression($callback)
+    {
+        return $this->addFilter(
+            self::FILTER_VISUALIZED_SHORTCODES_EXPRESSION, 
+            $callback
+        );
+    }
+    
     /**
     * put your comment there...
     * 

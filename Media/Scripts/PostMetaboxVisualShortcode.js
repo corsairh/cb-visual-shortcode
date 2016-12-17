@@ -95,10 +95,7 @@ var CBPostMetaboxViewVisualShortcode;
         {
             
             // Prompt if not in Visual View
-            var isVisualView = $('#wp-content-wrap').hasClass('tmce-active');
-            var editor;
-            
-            if (!isVisualView)
+            if (!this.isVisualViewMode())
             {
                 
                 if (!confirm(locals.visualizeOnHTMLMode))
@@ -106,18 +103,26 @@ var CBPostMetaboxViewVisualShortcode;
                     return;
                 }
             
-                editor = htmlEditor;
-            }
-            else
-            {
-                editor = tinymce.get('content');
             }
             
+            var editor = this.getEditor();
+            
             // Visualize
-            var visualizedContent = visualizeShortcodes(editor.getContent());
+            var visualizedContent = model.visualizeShortcodes(editor.getContent());
             
             // Set editor text back
             editor.setContent(visualizedContent);
+        };
+        
+        /**
+        * 
+        */
+        this.getEditor = function()
+        {
+            
+            var editor = this.isVisualViewMode() ? tinymce.get('content') : htmlEditor;
+            
+            return editor;
         };
         
         /**
@@ -139,6 +144,40 @@ var CBPostMetaboxViewVisualShortcode;
         this.getModel = function()
         {
             return model;
+        };
+        
+        /**
+        * 
+        */
+        this.getShortcodeTagsExpression = function()
+        {
+            return shortcodeTagExpr;
+        };
+
+        /**
+        * 
+        */
+        this.getShortcodeWrapperTag = function()
+        {
+            return shortcodeWrapperTag;
+        };
+        
+        /**
+        * 
+        */
+        this.getVisualizedTagsExpression = function()
+        {
+            return visualizedTagsExpr;
+        };
+        
+        /**
+        * 
+        */
+        this.isVisualViewMode = function()
+        {
+            var isVisualMode = $('#wp-content-wrap').hasClass('tmce-active');
+            
+            return isVisualMode;
         };
         
         /**
@@ -194,107 +233,6 @@ var CBPostMetaboxViewVisualShortcode;
             var result = metaboxElement.trigger(eventName, args);
             
             return result;
-        };
-        
-        /**
-        * put your comment there...
-        * 
-        * @param content
-        */
-        var visualizeShortcodes = function(content)
-        {
-            
-            // Initialize
-            var visualizedShortcode;
-            var visualizedShortcodes = [];
-            var shortcode;
-            var newWrappedShortcodes = [];
-            var newWrappedShortcode;
-            
-            /**
-            * Check whether the current shortocde is already
-            * wrapper with visual shortcode tags VST
-            * 
-            * @returns {Boolean}
-            */
-            var isVisualized = function()
-            {
-                
-                var visualizedShortcode;
-                var index = 0;
-                
-                for (; index < visualizedShortcodes.length ; index++)
-                {
-                    
-                    visualizedShortcode = visualizedShortcode = visualizedShortcodes[index];
-                    
-                    // disacrd visualized shortcode
-                    if ((shortcode.index > visualizedShortcode.startOffset) && 
-                        (shortcode.index < visualizedShortcode.endOffset))
-                    {
-                        
-                        return true;
-                    }                    
-                }
-                
-                return false;
-            };
-            
-            // Get all Already visualized Shortcodes to avoid 
-            // visualizing (wrap with visual shortcode plugin HTML tags!) it twice
-            while (visualizedShortcode = visualizedTagsExpr.exec(content))
-            {
-
-                visualizedShortcodes.push(
-                    {
-                        startOffset : visualizedShortcode.index,
-                        endOffset : (visualizedShortcode.index + visualizedShortcode[0].length)
-                    }
-                );
-            }
-            
-            // Find all Shortcodes, don't process those already visualized
-            while (shortcode = shortcodeTagExpr.exec(content))
-            {
-            
-                if (!isVisualized(shortcode))
-                {
-                    
-                    // Wrap snapped shortcode
-                    newWrappedShortcodes.push(
-                        {
-                            shortcode : shortcode,
-                            wrapperShortcodeHTML : shortcodeWrapperTag
-                                                    .replace('%shortcode_name%', shortcode[2])
-                                                    .replace('%shortcode%', shortcode[0])
-                        }
-                    );
-                    
-                }
-
-            }
-            
-            // Avoid index changing issue by reversing elements
-            newWrappedShortcodes = newWrappedShortcodes.reverse();
-            
-            for (var index in newWrappedShortcodes)
-            {
-                
-                newWrappedShortcode = newWrappedShortcodes[index];
-                
-                // Replace in conent
-                content =   content.substring(0, newWrappedShortcode.shortcode.index) + 
-                
-                            newWrappedShortcode.wrapperShortcodeHTML + 
-                            
-                            content.substring(( newWrappedShortcode.shortcode.index + 
-                                                newWrappedShortcode.shortcode[0].length)
-                                                );
-
-            }
-
-            return content;
-            
         };
         
         // Initialization
@@ -370,7 +308,7 @@ var CBPostMetaboxViewVisualShortcode;
                     throw "Model is not set!";
                 }
                 
-                visualizeButtonElement.click($.proxy(_OnVisualizeButtonClick));
+                visualizeButtonElement.click($.proxy(_OnVisualizeButtonClick, this));
                 
                 // Init Event
                 this.trigger('Init', [this]);
