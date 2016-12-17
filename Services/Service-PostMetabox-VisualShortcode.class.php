@@ -150,6 +150,13 @@ class CBVSServiceDashboardPostMetabox
     public function _display($post, $metaboxDef)
     {
         
+        // Filter visuaizxed shortcode expression
+        $visualizedShortcodesExpression = '\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-wrapper\x20+mceNonEditable\"\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-name\"\x20*\>[\s\na-zA-Z0-9]+\<\/div\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-shortcode\"\x20*\>(%SHORTCODE_EXPRESSION%)\<\/div\x20*\>[\s\n]*\<\/div\x20*\>';
+        
+        $visualizedShortcodesExpression = CBVSPlugin::hooks()->visualizedShortcodesExpression(
+            $visualizedShortcodesExpression
+        );
+        
         // Filter View and View parameters
         $view = array
         (
@@ -160,6 +167,8 @@ class CBVSServiceDashboardPostMetabox
         $view = CBVSPlugin::hooks()->visualizeMetaboxView($view);
         
         // Display all defined blocks
+        $view['args']['visualizedShortcodesExpression'] = $visualizedShortcodesExpression;
+        
         $form = CBVSPlugin::me()->renderView(
             $view['template'],
             $view['args']

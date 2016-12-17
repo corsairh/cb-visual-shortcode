@@ -28,7 +28,7 @@ defined('ABSPATH') or die();
 <?php ob_start() ?>
 
     <template   id="cb-visual-shortcode-shortcode-wrapper-template" 
-                data-expression='\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-wrapper\x20+mceNonEditable\"\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-name\"\x20*\>[\s\na-zA-Z0-9]+\<\/div\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-shortcode\"\x20*\>(.+)\<\/div\x20*\>[\s\n]*\<\/div\x20*\>'>
+                data-expression='<?php echo $visualizedShortcodesExpression; ?>'>
                 
          <template>
          

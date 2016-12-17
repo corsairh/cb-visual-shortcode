@@ -16,6 +16,8 @@ class CBVSPluggable extends CBVSPluggableInterface
     const ACTION_VISUALIZE_POST_METABOX_ENQUEUE_SCRIPTS = 'visualize-post-metabox-enqueue-scripts';
     const ACTION_VISUALIZE_POST_METABOX_ENQUEUE_STYLES = 'visualize-post-metabox-enqueue-styles';
     
+    const FILTER_VISUALIZED_SHORTCODES_EXPRESSION = 'visualized-shortcodes-expression';
+    
     const FILTER_VISUALIZE_POST_METABOX_PARAMETERS = 'visualize-post-metabox-parameters';
     const FILTER_VISUALIZE_POST_METABOX_VIEW = 'visualize-post-metabox-view';
     const FILTER_VISUALIZE_POST_METABOX_VIEW_TEMPLATE = 'visualize-post-metabox-view-template';
@@ -139,7 +141,20 @@ class CBVSPluggable extends CBVSPluggableInterface
             $styles
         ); 
     }
-    
+
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $expression
+    */
+    public function visualizedShortcodesExpression($expression)
+    {
+        return $this->applyFilter(
+            self::FILTER_VISUALIZED_SHORTCODES_EXPRESSION,
+            $expression
+        ); 
+    }
+
     /**
     * put your comment there...
     * 

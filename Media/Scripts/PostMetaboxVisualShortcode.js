@@ -72,6 +72,12 @@ var CBPostMetaboxViewVisualShortcode;
         * put your comment there...
         * 
         */
+        var shortcodeTagExpr;
+    
+        /**
+        * put your comment there...
+        * 
+        */
         var visualizeButtonElement;
         
         /**
@@ -199,7 +205,6 @@ var CBPostMetaboxViewVisualShortcode;
         {
             
             // Initialize
-            var shortcodeTagExpr = wp.shortcode.regexp("([a-zA-Z0-9]+)");
             var visualizedShortcode;
             var visualizedShortcodes = [];
             var shortcode;
@@ -269,8 +274,6 @@ var CBPostMetaboxViewVisualShortcode;
 
             }
             
-            console.debug(content);
-            
             // Avoid index changing issue by reversing elements
             newWrappedShortcodes = newWrappedShortcodes.reverse();
             
@@ -307,8 +310,19 @@ var CBPostMetaboxViewVisualShortcode;
                 // Get Shortcode wrapper code  and Expression, from template tag
                 var visualizedShortcodeTemplate = $('#cb-visual-shortcode-shortcode-wrapper-template');
                 
+                shortcodeTagExpr = wp.shortcode.regexp("([a-zA-Z0-9_]+)");
+
                 shortcodeWrapperTag = $(visualizedShortcodeTemplate.get(0).content).find('>template').html().trim();
-                visualizedTagsExpr = new RegExp(visualizedShortcodeTemplate.attr('data-expression'), 'gm');
+                
+                // Use Shortcode expression to create complete expression for vsiualized tags expression
+                var visualizedTagsExprText = visualizedShortcodeTemplate.attr('data-expression');
+                
+                visualizedTagsExprText = visualizedTagsExprText.replace(
+                    '%SHORTCODE_EXPRESSION%',
+                    shortcodeTagExpr.source
+                );
+                
+                visualizedTagsExpr = new RegExp(visualizedTagsExprText, 'gm');
                 
                 // Create HTML TextArea Interface similar to TinyMC Editor
                 // INterface so accessin them using the same method names
