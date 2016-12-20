@@ -4,7 +4,7 @@
     background-color: #0a88ce;
     width: 62px;
     height: 56px;
-    cursor: pointer;
+    cursor: pointer !important;
 }
 
 .cb-visual-shortcode-wrapper .cb-visual-shortcode-name

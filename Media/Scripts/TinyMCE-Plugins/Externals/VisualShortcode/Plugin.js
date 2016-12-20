@@ -34,20 +34,39 @@ tinymce.PluginManager.add("VisualShortcode",
             * put your comment there...
             * 
             */
+            var makeVisualizesShortcodesClickable = function(event)
+            {
+                
+                editor.$('.cb-visual-shortcode-wrapper').on('click',
+                    
+                    function()
+                    {
+                        model.showParametersForm(event);
+                    }
+                );
+                
+            };
+            /**
+            * put your comment there...
+            * 
+            */
             var initVisualShortcodePlugin = function()
             {
                 
                 // Get Visual Shortcode Model object instance
-                model = CBPostMetaboxViewVisualShortcode.getModel();
-                
-                
+                model = CBPostMetaboxViewVisualShortcode.getModel();                
+            
             };
             
             // Edit init
             editor.on('init', initVisualShortcodePlugin);
-        
-            // Switch from HTML to Visual View
-            //editor.on('loadContent', initVisualShortcode);
+                        
+            // Switch from HTML to Visual View and load content
+            // evey time Visualize function is requested
+            editor.on('loadContent', makeVisualizesShortcodesClickable);
+            
+            // Make shortcode clickables after every visualization process
+            CBPostMetaboxViewVisualShortcode.on('visualized', makeVisualizesShortcodesClickable);
         };
 
     }

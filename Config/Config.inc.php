@@ -8,11 +8,21 @@
 */
 return array
 (
-    
-    'localization' => array
+
+    'config' => array
     (
-        'dir' => 'Languages',
+    
+        'local' => array
+        (
+            'textDomain' => 'cb-visual-shortcode',
+            'dir' => 'Languages',
+        ),
+        
+        'slugNamespace' => 'cbvs',
+        
     ),
+    
+    'installer' => 'CBVSInstaller',
     
     'view' => array
     (
@@ -30,5 +40,6 @@ return array
     (
         'scriptsPath' => 'Media/Scripts',
         'stylesPath' => 'Media/Styles',
-    )
+    ),
+
 );

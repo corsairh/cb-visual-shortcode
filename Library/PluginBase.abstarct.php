@@ -38,6 +38,27 @@ abstract class CBVSPluginBase
     * 
     * @var mixed
     */
+    private $modules = array();
+    
+    /**
+    * put your comment there...
+    * 
+    * @var mixed
+    */
+    private $name;
+    
+    /**
+    * put your comment there...
+    * 
+    * @var mixed
+    */
+    private $services = array();
+    
+    /**
+    * put your comment there...
+    * 
+    * @var mixed
+    */
     private $textDomain;
     
     /**
@@ -73,23 +94,18 @@ abstract class CBVSPluginBase
     * 
     * @param mixed $text
     */
-    public static function __($text)
+    public function __($text)
     {
         
-        $instance =& self::getPlugin(get_called_class());
-        
-        $localText = __($text, $instance->textDomain);
-        
-        // Placehoders
+        // Call $this->getText() with all passed args + text domain as first parameter
         $args = func_get_args();
         
-        if (!empty($args))
-        {
-            
-            $args[0] = $localText;
-            
-            $localText = call_user_func_array('sprintf', $args);
-        }
+        array_unshift($args, $this->textDomain);
+        
+        $localText = call_user_func_array(
+            array($this, 'getText'),
+            $args
+        );
         
         return $localText;
     }
@@ -101,20 +117,19 @@ abstract class CBVSPluginBase
     * @param mixed $config
     * @return CBVSPlugin
     */
-    protected function __construct($file, $config) 
+    protected function __construct($file, $config = array()) 
     {
         
         // INit
         $this->file = $file;
+        $this->name = basename($file);
         $this->dir = dirname($file);
         $this->url = plugin_dir_url($this->getFile());
         
         // Config
         $this->config = $config;
         
-        // Resources Urls
-        $this->urlScripts = "{$this->url}/{$config['resource']['scriptsPath']}";
-        $this->urlStyles = "{$this->url}/{$config['resource']['stylesPath']}";
+        $this->textDomain = $this->config['config']['local']['textDomain'];
         
     }
 
@@ -123,15 +138,10 @@ abstract class CBVSPluginBase
     * 
     * @param mixed $text
     */
-    public static function _e($text)
+    public function _e($text)
     {
         
-        $callerClass = get_called_class();
-        
-        $args[] = func_get_args();
-        array_unshift($args, $text);
-        
-        $localTxt = call_user_func_array(array($callerClass, '__'), func_get_args());
+        $localTxt = call_user_func_array(array($this, '__'), func_get_args());
         
         echo $localTxt;
     }
@@ -143,12 +153,13 @@ abstract class CBVSPluginBase
     public function _localize()
     {
         
-        $localDir = $this->config['localization']['dir'];
-        
+        // Localize plugin/module
+        $localConfig =& $this->config['config']['local'];
+
         load_plugin_textdomain(
             $this->textDomain, 
             false, 
-            basename(dirname(__FILE__)) . DIRECTORY_SEPARATOR . $localDir
+            $this->name . DIRECTORY_SEPARATOR . $localConfig['dir']
         );
     }
 
@@ -182,6 +193,40 @@ abstract class CBVSPluginBase
     /**
     * put your comment there...
     * 
+    * @param mixed $name
+    */
+    public function & getModule($name)
+    {
+        
+        if (!isset($this->modules[$name]))
+        {
+            throw new Exception("{$name} module doesnt exists!");
+        }
+        
+        return $this->modules[$name];
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    public function getModules()
+    {
+        return $this->modules;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    public function getName()
+    {
+        return $this->name;
+    }
+    
+    /**
+    * put your comment there...
+    * 
     * @param mixed $class
     */
     public static function & getPlugin($class)
@@ -198,6 +243,52 @@ abstract class CBVSPluginBase
     }
     
     /**
+    * put your comment there...
+    * 
+    */
+    public function getSlugNamespace()
+    {
+        
+        $slugNs = $this->config['config']['slugNamespace'];
+        
+        return $slugNs;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $text
+    * @param mixed $domain
+    */
+    public function getText($domain, $text)
+    {
+        
+        $localText = __($text, $domain);
+        
+        // Placholder as all args after excluding domain and text args
+        $args = array_slice(func_get_args(), 2);
+        
+        if (!empty($args))
+        {
+            
+            $args[0] = $localText;
+            
+            $localText = call_user_func_array('sprintf', $args);
+        }
+        
+        return $localText;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    public function getTextDomain()
+    {
+        return $this->textDomain;
+    }
+    
+    /**
     * 
     */
     public static function & hooks()
@@ -209,10 +300,116 @@ abstract class CBVSPluginBase
     * put your comment there...
     * 
     */
-    protected function init()
+    protected function & loadModules()
     {
-        // Localize
-        add_action('plugins_loaded', array($this, '_localize'));
+        
+        // Init
+        $modulesConfig =& $this->config['modules'];
+        $modulesDir = $this->getDir() . DIRECTORY_SEPARATOR . $modulesConfig['dir'];
+        
+        // Load all modules
+        $modulesNamespace = $modulesConfig['namespace'];
+        
+        foreach ($modulesConfig['list'] as $moduleName => $moduleData)
+        {
+            
+            // Build module file path
+            $moduleFileRelPath =    $moduleData['dirName'] .
+                                    DIRECTORY_SEPARATOR . "Plugin-Module-{$moduleData['dirName']}.class.php";
+                                    
+            $moduleFileAbsPath =    $modulesDir . DIRECTORY_SEPARATOR . $moduleFileRelPath;
+            
+            // Module config file
+            $moduleConfigFilePath = $modulesDir . DIRECTORY_SEPARATOR . 
+                                    $moduleData['dirName'] . DIRECTORY_SEPARATOR .
+                                    'Config.inc.php';
+                                    
+            $moduleConfig = file_exists($moduleConfigFilePath) ? 
+                            require $moduleConfigFilePath :
+                            array();
+
+            // Merge only config section from parent plugin/module
+            $moduleConfig['config'] = array_merge(
+                $this->config['config'], 
+                $moduleConfig['config']
+            );
+                                        
+            // get Module class
+            $moduleClass = "{$modulesNamespace}{$moduleName}";
+
+            // Load module
+            $module = call_user_func(
+                array($moduleClass, 'Plug'),
+                $moduleFileAbsPath,
+                $moduleConfig
+            );
+            
+            // Bind module
+            $module->bind($this);
+            
+            // Hold module pointer
+            $this->modules[$moduleName] = $module;
+            
+        }
+        
+        return $this;
+    }
+
+    /**
+    * put your comment there...
+    * 
+    */
+    public function & loadServices()
+    {
+        
+        $servicesClass = func_get_args();
+        
+        foreach ($servicesClass as $serviceClass)
+        {
+            
+            $serviceObject = new $serviceClass($this);
+
+            $this->services[$serviceClass] = $serviceObject;            
+        }
+        
+        return $this;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @return BOOL|Exception True if installed successed or Exception if installation faild
+    */
+    protected function init() 
+    {
+        
+        // Out if not installer defined
+        if (!isset($this->config['installer']) || 
+            !$this->config['installer'])
+        {
+            return true;
+        }
+        
+        // Get installer instance
+        $installerClass = $this->config['installer'];
+        $installer = call_user_func(array($installerClass, 'create'));
+        
+        // Install
+        if ($installer->isInstalled() != CBVSInstallerBase::INSTALLED)
+        {
+            try
+            {
+                // Install
+                $installer->install();
+            }
+            catch (Exception $exception)
+            {
+                return $exception;
+            }
+        }
+        
+        return true;
+        
     }
     
     /**
@@ -239,7 +436,7 @@ abstract class CBVSPluginBase
         
         $pluginClass = get_called_class();
         
-        if (!self::$instances[$pluginClass])
+        if (!isset(self::$instances[$pluginClass]))
         {
             
             // Instantiate
@@ -276,14 +473,21 @@ abstract class CBVSPluginBase
             DIRECTORY_SEPARATOR, 
             $config['view']['views'][$name]
         );
-                              
+        
+        $templateFilePath = $this->getDir() . DIRECTORY_SEPARATOR . "{$tmpPath}.{$tmpExtension}";
+        
+        if (!file_exists($templateFilePath))
+        {
+            throw new Exception("{$name} Template file doesnt exists!");
+        }
+        
         # Extract template vars to be simply accessible by template
         extract($vars);
         
         # Reneder template
         ob_start();
         
-        require $this->getDir() . DIRECTORY_SEPARATOR . "{$tmpPath}.{$tmpExtension}";
+        require $templateFilePath;
     
         $template = ob_get_clean();
         
@@ -295,8 +499,13 @@ abstract class CBVSPluginBase
     * 
     * @param mixed $path
     */
-    public function url($path)
+    public function url($path = '')
     {
+        
+        if ($path)
+        {
+            $path .= "/{$path}";
+        }
         
         $url = "{$this->url}{$path}";
         
@@ -328,4 +537,31 @@ abstract class CBVSPluginBase
         
         return $url;
     }
+ 
+    /**
+    * put your comment there...
+    * 
+    */
+    protected function & useLocalization()
+    {
+        
+        add_action('plugins_loaded', array($this, '_localize'));
+        
+        return $this;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    protected function & useResources()
+    {
+        
+        // Resources Urls
+        $this->urlScripts = "{$this->url}/{$this->config['resource']['scriptsPath']}";
+        $this->urlStyles = "{$this->url}/{$this->config['resource']['stylesPath']}";
+        
+        return $this;
+    }
+    
 }

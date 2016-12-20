@@ -35,6 +35,21 @@ var CBVisualShortcode;
             return opts;
         };
         
+        /**
+        * 
+        */
+        this.makeVisualizedShortcodesClickable = function()
+        {
+            
+            $('.cb-visual-shortcode-wrapper').click(
+                
+                function()
+                {
+                    
+                }
+            );
+            
+        };
         
         /**
         * put your comment there...

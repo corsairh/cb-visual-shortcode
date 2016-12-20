@@ -33,27 +33,18 @@ class CBVSPlugin extends CBVSPluginBase
     */
     protected function init()
     {
-        
-        parent::init();
+                
+        // Use Localization
+        $this->useLocalization();
         
         // Hooks instance
         self::$hooks =& CBVSPluggable::getInstance();
-                    
-        // Install
-        if (CBVSInstaller::create()->isInstalled() != CBVSInstaller::INSTALLED)
-        {
-            try
-            {
-                CBVSInstaller::getInstance()->install();
-            }
-            catch (Exception $exception)
-            {
-                
-                echo self::__('Couldnt instal Visual Shortcode Plugin. Details:', $exception->getMessage());
-                
-                return;
-            }
-        }
+        
+        // This include installation!
+        parent::init();
+        
+        // Use Resources
+        $this->useResources();
         
         // Services
         if (is_admin())

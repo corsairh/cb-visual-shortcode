@@ -47,15 +47,7 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     * @var mixed
     */
     protected $installedVersion = null;
-    
-    /**
-    * put your comment there...
-    * 
-    * @var mixed
-    */
-    private static $instance;
 
-    
     /**
     * put your comment there...
     * 
@@ -63,12 +55,11 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     public static function & create()
     {
         
-        if (!self::$instance)
-        {
-            self::$instance = new CBVSInstaller();
-        }
+        $class = get_called_class();
         
-        return self::$instance;
+        $installer = new $class();
+        
+        return $installer;
     }
     
     /**
@@ -152,6 +143,8 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
             break;
         }
         
+        // Fire internal event
+        $this->onPreWriteInstallState();
         
         // Save new version
         $this->installedVersion = $this->getCurrentVersion();
@@ -173,6 +166,12 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
         return $this->installionState;
     }
 
+    /**
+    * put your comment there...
+    * 
+    */
+    protected function onPreWriteInstallState() {}
+    
     /**
     * put your comment there...
     * 

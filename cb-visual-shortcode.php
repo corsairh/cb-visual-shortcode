@@ -20,5 +20,5 @@ require 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 CBVSPlugin::plug(
     __FILE__,
     require  __DIR__ . DIRECTORY_SEPARATOR .
-            'Config' . DIRECTORY_SEPARATOR . 'Plugin.inc.php'
+            'Config' . DIRECTORY_SEPARATOR . 'Config.inc.php'
 );

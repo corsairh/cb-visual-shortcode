@@ -112,6 +112,9 @@ var CBPostMetaboxViewVisualShortcode;
             
             // Set editor text back
             editor.setContent(visualizedContent);
+            
+            this.trigger('visualized');
+            
         };
         
         /**
