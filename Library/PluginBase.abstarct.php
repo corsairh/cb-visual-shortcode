@@ -167,7 +167,27 @@ abstract class CBVSPluginBase
     * put your comment there...
     * 
     */
-    public function getConfig()
+    public function & defineServicesController()
+    {
+        
+        $servicesClass = func_get_args();
+        
+        foreach ($servicesClass as $serviceClass)
+        {
+            
+            $serviceObject = new $serviceClass($this);
+
+            $this->services[$serviceClass] = $serviceObject;            
+        }
+        
+        return $this;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    public function & getConfig()
     {
         return $this->config;
     }
@@ -245,6 +265,22 @@ abstract class CBVSPluginBase
     /**
     * put your comment there...
     * 
+    * @param mixed $name
+    */
+    public function & getServiceController($name)
+    {
+        
+        if (!isset($this->services[$name]))
+        {
+            throw new Exception("{$name} Service Controller doesnt exists!");
+        }
+        
+        return $this->services[$name];
+    }
+    
+    /**
+    * put your comment there...
+    * 
     */
     public function getSlugNamespace()
     {
@@ -294,6 +330,23 @@ abstract class CBVSPluginBase
     public static function & hooks()
     {
         return self::$hooks;
+    }
+
+    /**
+    * put your comment there...
+    * 
+    */
+    public function & html()
+    {
+        
+        static $html;
+        
+        if (!$html)
+        {
+            $html = new CBVSHTMLDocument();
+        }
+        
+        return $html;
     }
     
     /**
@@ -350,26 +403,6 @@ abstract class CBVSPluginBase
             // Hold module pointer
             $this->modules[$moduleName] = $module;
             
-        }
-        
-        return $this;
-    }
-
-    /**
-    * put your comment there...
-    * 
-    */
-    public function & loadServices()
-    {
-        
-        $servicesClass = func_get_args();
-        
-        foreach ($servicesClass as $serviceClass)
-        {
-            
-            $serviceObject = new $serviceClass($this);
-
-            $this->services[$serviceClass] = $serviceObject;            
         }
         
         return $this;
@@ -493,6 +526,23 @@ abstract class CBVSPluginBase
         
         return $template;
     }
+
+    /**
+    * put your comment there...
+    * 
+    */
+    public function & router()
+    {
+        
+        static $router;
+        
+        if (!$router)
+        {
+            $router = new CBVSRouterHelper();
+        }
+        
+        return $router;
+    }
     
     /**
     * put your comment there...
@@ -537,7 +587,27 @@ abstract class CBVSPluginBase
         
         return $url;
     }
- 
+    
+    /**
+    * put your comment there...
+    * 
+    * @param CBVSPluginBase $module
+    * @return CBVSPluginBase
+    */
+    protected function & useDbTableNames(CBVSPluginBase & $module)
+    {
+        
+        $moduleConfig =& $module->getConfig();
+        $myConfig = $this->getConfig();
+
+        CBVSTableBase::prepareTableNames(
+            $moduleConfig['db']['tablePrefix'],
+            $myConfig['db']['tables']
+        );
+        
+        return $this;
+    }
+    
     /**
     * put your comment there...
     * 
