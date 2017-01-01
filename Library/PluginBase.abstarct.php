@@ -186,10 +186,159 @@ abstract class CBVSPluginBase
     /**
     * put your comment there...
     * 
+    * @param mixed $baseUri
+    * @param mixed $routeName
+    * @param mixed $routes
+    */
+    public function getRoutes($baseUri, $routeNames, $actions)
+    {
+        
+        $routes = array();
+        $router =& $this->router();
+        $varsList = array();
+        
+        foreach ($actions as $actionName => $actionParams)
+        {
+            
+            // Convert Route Name string to RouteName => array()
+            if (!is_array($actionParams))
+            {
+                $actionName = $actionParams;
+                $actionParams = array();
+            }
+            
+            // Vars List
+            $varsList['${KEY}'] = $actionName;
+            
+            // Build Common Parameters
+            foreach ($routeNames as $routeName => $routeValue)
+            {
+                $actionParams[$routeName] = isset($varsList[$routeValue]) ? 
+                                            $varsList[$routeValue] :
+                                            $routeValue;    
+            }
+            
+            // Create routes
+            $routes[$actionName] = $router->buildUri($baseUri, $actionParams);
+        }
+        
+        return $routes;
+    }
+    
+    /**
+    * put your comment there...
+    * 
     */
     public function & getConfig()
     {
         return $this->config;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $serviceController
+    * @return mixed
+    */
+    public function dispatchRequestedAJAXAction(& $serviceController)
+    {
+        
+        $result = null;
+        
+        try
+        {
+            
+            $result = $this->dispatchRequestedAction(
+                $serviceController, 
+                $dispatchInfo
+            );
+            
+            // HTTP Success Header
+            header('HTTP:1/1 200 OK');
+        }
+        catch (Exception $exception)
+        {
+            
+            // HTTP INternal Server error
+            header('HTTP:1/1 500 Internal Server Error');
+            
+            throw $exception;
+        }
+
+        // Render Ajax Response based on inpput format
+        $response = $this->renderRequestedView(
+            $serviceController,
+            $dispatchInfo,
+            $result
+        );
+        
+        return $response;
+    }
+
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $serviceController
+    * @param mixed $dispathInfo
+    */
+    public function dispatchRequestedAction(& $serviceController, & $dispathInfo = null)
+    {
+        
+        $config =& $this->config;
+        
+        // Read MVC Configs for current service controller
+        $ivp = $config['config']['slugNamespace']; // Input Var Prefix
+        $mvcConfig = $config['mvc'];
+        $controllers =& $mvcConfig['controllers'];
+        $serviceCtrConfig =& $mvcConfig['serviceControllers'][get_class($serviceController)]; 
+        
+        // Input vars name
+        $controllerVarName = "{$ivp}-rcontroller";
+        $viewVarName = "{$ivp}-rview";
+        $actionVarName = "{$ivp}-raction";
+        $templateVarName = "{$ivp}-rtemplate";
+        
+        # Select template name based on requested view
+        $viewName =   (isset($_GET[$viewVarName]) && $_GET[$viewVarName]) ? 
+                            $_GET[$viewVarName] : $serviceCtrConfig['view'];
+                                                        
+        $controllerName =   (isset($_GET[$controllerVarName]) && $_GET[$controllerVarName]) ? 
+                            $_GET[$controllerVarName] : $viewName;
+                            
+        $actionName =   (isset($_GET[$actionVarName]) && $_GET[$actionVarName]) ? 
+                        $_GET[$actionVarName] : $serviceCtrConfig['action'];
+        
+        $templateName = (isset($_GET[$templateVarName]) && $_GET[$templateVarName]) ? 
+                        $_GET[$templateVarName] : 
+                        (
+                            isset($serviceMvcConfig['template']) ? 
+                            $serviceMvcConfig['template'] :
+                            $actionName
+                        );
+                            
+        # Create Controller and Dispatch action
+        if (!isset($controllers[$controllerName]))
+        {
+            throw new Exception("{$controllerName} Controller doesnt exists");
+        }
+        
+        // Create controller            
+        $controllerClass = $controllers[$controllerName]['class'];
+        $controller = new $controllerClass($serviceController);
+        
+        // Dispatch action
+        $result = $controller->dispatchAction($actionName);
+        
+        // Set Dispath infor sturcture back
+        $dispathInfo['controllerName'] = $controllerName;
+        $dispathInfo['viewName'] = $viewName;
+        $dispathInfo['actionName'] = $actionName;
+        $dispathInfo['templateName'] = $templateName;
+        
+        $dispathInfo['controller'] =& $controller;
+        
+        // Return Result
+        return $result;
     }
     
     /**
@@ -325,14 +474,6 @@ abstract class CBVSPluginBase
     }
     
     /**
-    * 
-    */
-    public static function & hooks()
-    {
-        return self::$hooks;
-    }
-
-    /**
     * put your comment there...
     * 
     */
@@ -352,6 +493,31 @@ abstract class CBVSPluginBase
     /**
     * put your comment there...
     * 
+    * @param mixed $configName
+    */
+    public function loadConfig($configName)
+    {
+        
+        static $configs = array();
+        
+        if (!isset($configs[$configName]))
+        {
+            // Load config file
+            $configDir = $this->config['config']['configDir'];
+            
+            $configFile =   $configDir . DIRECTORY_SEPARATOR .
+                            "{$configName}.config.php";
+            
+            // Return configuration
+            $configs[$configName] = require $configFile;            
+        }
+        
+        return $configs[$configName];
+    }
+    
+    /**
+    * put your comment there...
+    * 
     */
     protected function & loadModules()
     {
@@ -359,6 +525,7 @@ abstract class CBVSPluginBase
         // Init
         $modulesConfig =& $this->config['modules'];
         $modulesDir = $this->getDir() . DIRECTORY_SEPARATOR . $modulesConfig['dir'];
+        $configDir = $this->config['config']['configDir'];
         
         // Load all modules
         $modulesNamespace = $modulesConfig['namespace'];
@@ -375,7 +542,8 @@ abstract class CBVSPluginBase
             // Module config file
             $moduleConfigFilePath = $modulesDir . DIRECTORY_SEPARATOR . 
                                     $moduleData['dirName'] . DIRECTORY_SEPARATOR .
-                                    'Config.inc.php';
+                                    $configDir . DIRECTORY_SEPARATOR .
+                                    'Config.config.php';
                                     
             $moduleConfig = file_exists($moduleConfigFilePath) ? 
                             require $moduleConfigFilePath :
@@ -486,32 +654,79 @@ abstract class CBVSPluginBase
     /**
     * put your comment there...
     * 
-    * @param mixed $name
+    * @param mixed $srvController
+    * @param mixed $dispatchInfo
     * @param mixed $vars
     */
-    public function renderView($name, $vars = array())
+    public function renderRequestedView(& $srvController, 
+                                        & $dispatchInfo, 
+                                        $result = array())
     {
         
-        // Get view path
+        $response = '';
+        
+        // Render View based on the requested format
+        $srvConfig =& $this->config['mvc']['serviceControllers'][get_class($srvController)];
+        $ivp = $this->config['config']['slugNamespace'];
+        
+        // Getting format based on the input vars
+        $formatVarName = "{$ivp}-rformat";
+        
+        $formatName =   isset($_GET[$formatVarName]) && $_GET[$formatVarName] ?
+                        $_GET[$formatVarName] :
+                        $srvConfig['format'];
+                        
+        
+        switch ($formatName)
+        {
+            
+            case 'xml': break;
+            
+            case 'json':
+            
+                $response = json_encode($result);
+                
+            break;
+            
+            default: // HTML
+            
+                // Render HTML View!
+                $viewFullName = "{$dispatchInfo['viewName']}:{$dispatchInfo['templateName']}";
+            
+                $response = $this->renderView(
+                    $viewFullName,
+                    $result
+                );
+                
+            break;
+        }
+        
+        return $response;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $path
+    * @param mixed $vars
+    */
+    public function renderTemplate($__tmpPath__, $vars = array())
+    {
+        
         $config =& $this->config;
         $tmpExtension = $config['view']['extension'];
         
-        if (!isset($config['view']['views'][$name]))
-        {
-            throw new Exception("{$name} Template could not be loaded!!!");
-        }
-        
-        $tmpPath = str_replace(
+        $__tmpPath__ = str_replace(
             '/', 
             DIRECTORY_SEPARATOR, 
-            $config['view']['views'][$name]
+            $__tmpPath__
         );
         
-        $templateFilePath = $this->getDir() . DIRECTORY_SEPARATOR . "{$tmpPath}.{$tmpExtension}";
+        $templateFilePath = $this->getDir() . DIRECTORY_SEPARATOR . "{$__tmpPath__}.{$tmpExtension}";
         
         if (!file_exists($templateFilePath))
         {
-            throw new Exception("{$name} Template file doesnt exists!");
+            throw new Exception("{$__tmpPath__} Template file doesnt exists!");
         }
         
         # Extract template vars to be simply accessible by template
@@ -525,6 +740,28 @@ abstract class CBVSPluginBase
         $template = ob_get_clean();
         
         return $template;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $name
+    * @param mixed $vars
+    */
+    public function renderView($name, $vars = array())
+    {
+        
+        // Get view path
+        $config =& $this->config;
+        
+        if (!isset($config['view']['views'][$name]))
+        {
+            throw new Exception("{$name} Template could not be loaded!!!");
+        }
+        
+        $content = $this->renderTemplate($config['view']['views'][$name], $vars);
+        
+        return $content;
     }
 
     /**

@@ -38,6 +38,28 @@ abstract class CBVSPluggableInterface
     /**
     * put your comment there...
     * 
+    * @param mixed $actionName
+    * @param mixed $callback
+    * @param mixed $priority
+    * @param mixed $argsCount
+    * @return CBVSPluggableInterface
+    */
+    public function & addAjaxPrivAction($actionName, $callback, $priority = 10, $argsCount = 1)
+    {
+
+        add_action(
+            "wp_ajax_{$actionName}",
+            $callback,
+            $priority,
+            $argsCount
+        );
+        
+        return $this;
+    }
+    
+    /**
+    * put your comment there...
+    * 
     * @param mixed $action
     * @param mixed $callback
     * @param mixed $priority
