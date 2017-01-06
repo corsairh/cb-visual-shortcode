@@ -175,7 +175,10 @@ abstract class CBVSPluginBase
         foreach ($servicesClass as $serviceClass)
         {
             
-            $serviceObject = new $serviceClass($this);
+            $serviceObject = call_user_func(
+                array($serviceClass, 'run'),
+                $this
+            );
 
             $this->services[$serviceClass] = $serviceObject;            
         }
@@ -505,7 +508,8 @@ abstract class CBVSPluginBase
             // Load config file
             $configDir = $this->config['config']['configDir'];
             
-            $configFile =   $configDir . DIRECTORY_SEPARATOR .
+            $configFile =   $this->dir . DIRECTORY_SEPARATOR .
+                            $configDir . DIRECTORY_SEPARATOR .
                             "{$configName}.config.php";
             
             // Return configuration
@@ -865,8 +869,8 @@ abstract class CBVSPluginBase
     {
         
         // Resources Urls
-        $this->urlScripts = "{$this->url}/{$this->config['resource']['scriptsPath']}";
-        $this->urlStyles = "{$this->url}/{$this->config['resource']['stylesPath']}";
+        $this->urlScripts = "{$this->url}{$this->config['resource']['scriptsPath']}";
+        $this->urlStyles = "{$this->url}{$this->config['resource']['stylesPath']}";
         
         return $this;
     }
