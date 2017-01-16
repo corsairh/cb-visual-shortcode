@@ -17,33 +17,41 @@ abstract class CBVSStatedObject
     * 
     * @var mixed
     */
-    protected $__storageName;
+    protected $storageName;
+    
+    /**
+    * put your comment there...
+    * 
+    * @var mixed
+    */
+    protected $stateVars = array();
         
     /**
     * put your comment there...
     * 
     */
-    public function __construct() 
+    protected function __construct() 
     {
         
         // Default storage name
-        if (!$this->__storageName)
+        if (!$this->storageName)
         {
-            $this->__storageName = get_class($this);
+            $this->storageName = get_class($this);
         }
         
         // Read values
         $this->read();
         
         // INit object
-        $this->init();
+        $this->_init();
+        
     }
     
     /**
     * put your comment there...
     * 
     */
-    protected function init() {}
+    protected function _init() {}
     
     /**
     * put your comment there...
@@ -77,16 +85,9 @@ abstract class CBVSStatedObject
         
         $storage = array();
         
-        $vars = get_object_vars($this);
-        
-        foreach ($vars as $varName => $value)
+        foreach ($this->stateVars as $varname)
         {
-            
-            if (strpos($varName, '__') !== 0)
-            {
-                $storage[$varName] = $value;
-            }
-            
+            $storage[$varname] = $this->$varname;
         }
         
         $this->writeStorage($storage);

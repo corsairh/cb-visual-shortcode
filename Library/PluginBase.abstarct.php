@@ -167,6 +167,22 @@ abstract class CBVSPluginBase
     * put your comment there...
     * 
     */
+    public function & db()
+    {
+        static $db;
+        
+        if (!$db)
+        {
+            $db = new CBVSDatabase($GLOBALS['wpdb']);
+        }
+        
+        return $db;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
     public function & defineServicesController()
     {
         
@@ -185,18 +201,19 @@ abstract class CBVSPluginBase
         
         return $this;
     }
-    
+
     /**
     * put your comment there...
     * 
     * @param mixed $baseUri
-    * @param mixed $routeName
+    * @param mixed $routeNames
+    * @param mixed $actions
     * @param mixed $routes
+    * @return CBVSPluginBase
     */
-    public function getRoutes($baseUri, $routeNames, $actions)
+    public function & getRoutes($baseUri, $routeNames, $actions, & $routes)
     {
-        
-        $routes = array();
+
         $router =& $this->router();
         $varsList = array();
         
@@ -225,7 +242,7 @@ abstract class CBVSPluginBase
             $routes[$actionName] = $router->buildUri($baseUri, $actionParams);
         }
         
-        return $routes;
+        return $this;
     }
     
     /**
@@ -325,12 +342,19 @@ abstract class CBVSPluginBase
             throw new Exception("{$controllerName} Controller doesnt exists");
         }
         
+        // Set MVC Config class namespace if not set
+        // This is because MVC configs is not currently inherited
+        if (!isset($mvcConfig['namespace']))
+        {
+            $mvcConfig['namespace'] = $config['config']['namespace'];
+        }
+        
         // Create controller            
         $controllerClass = $controllers[$controllerName]['class'];
-        $controller = new $controllerClass($serviceController);
-        
-        // Dispatch action
-        $result = $controller->dispatchAction($actionName);
+        $controller = new $controllerClass( $mvcConfig,
+                                            $dispathInfo,
+                                            $serviceController,
+                                            $this);
         
         // Set Dispath infor sturcture back
         $dispathInfo['controllerName'] = $controllerName;
@@ -339,6 +363,10 @@ abstract class CBVSPluginBase
         $dispathInfo['templateName'] = $templateName;
         
         $dispathInfo['controller'] =& $controller;
+        $dispathInfo['serviceController'] =& $serviceController;
+        
+        // Dispatch action
+        $result = $controller->dispatchAction($actionName);
         
         // Return Result
         return $result;
@@ -694,6 +722,16 @@ abstract class CBVSPluginBase
             
             default: // HTML
             
+                // Default Renderer helper
+                // Regullar to be used for displaying error/notice/wanring messages
+                $result['rh'] = new CBVSViewRendererHelper($dispatchInfo['serviceController']->getMessages());
+            
+                // Clear messages and write states
+                $dispatchInfo['serviceController']->clearMessages();
+                
+                // Write Service Controller, Controller and Models states
+                $dispatchInfo['controller']->write();
+                
                 // Render HTML View!
                 $viewFullName = "{$dispatchInfo['viewName']}:{$dispatchInfo['templateName']}";
             
@@ -730,7 +768,7 @@ abstract class CBVSPluginBase
         
         if (!file_exists($templateFilePath))
         {
-            throw new Exception("{$__tmpPath__} Template file doesnt exists!");
+            throw new Exception("{$templateFilePath} Template file doesnt exists!");
         }
         
         # Extract template vars to be simply accessible by template
@@ -779,7 +817,14 @@ abstract class CBVSPluginBase
         
         if (!$router)
         {
-            $router = new CBVSRouterHelper();
+            
+            if (!$this->config['config']['router']['class'])
+            {
+                throw new Exception('Router is not configured');
+            }
+            
+            $routerClass = $this->config['config']['router']['class'];
+            $router = new $routerClass();
         }
         
         return $router;

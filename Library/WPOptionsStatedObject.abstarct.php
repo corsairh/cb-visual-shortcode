@@ -20,7 +20,7 @@ extends CBVSStatedObject
     protected function readStorage()
     {
         
-        $data = get_option($this->__storageName, array());
+        $data = get_option($this->storageName, array());
         
         return $data;
     }
@@ -34,7 +34,7 @@ extends CBVSStatedObject
     protected function & writeStorage($data)
     {
         
-        update_option($this->__storageName, $data);
+        update_option($this->storageName, $data);
         
         return $this;
     }
