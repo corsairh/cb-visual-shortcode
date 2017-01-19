@@ -173,7 +173,13 @@ abstract class CBVSPluginBase
         
         if (!$db)
         {
+            
             $db = new CBVSDatabase($GLOBALS['wpdb']);
+            
+            // Configure Database object table names
+            $config = $this->getConfig();
+            
+            $db->addTables($config['db']['tables'], $config['db']['tablePrefix']);
         }
         
         return $db;
@@ -692,10 +698,15 @@ abstract class CBVSPluginBase
     */
     public function renderRequestedView(& $srvController, 
                                         & $dispatchInfo, 
-                                        $result = array())
+                                        $result = null)
     {
         
         $response = '';
+        
+        if (!$result)
+        {
+            $result = array();
+        }
         
         // Render View based on the requested format
         $srvConfig =& $this->config['mvc']['serviceControllers'][get_class($srvController)];
@@ -716,6 +727,9 @@ abstract class CBVSPluginBase
             
             case 'json':
             
+                // Push messsages
+                $result['messages'] = $dispatchInfo['serviceController']->getMessages();
+                
                 $response = json_encode($result);
                 
             break;
@@ -724,10 +738,7 @@ abstract class CBVSPluginBase
             
                 // Default Renderer helper
                 // Regullar to be used for displaying error/notice/wanring messages
-                $result['rh'] = new CBVSViewRendererHelper($dispatchInfo['serviceController']->getMessages());
-            
-                // Clear messages and write states
-                $dispatchInfo['serviceController']->clearMessages();
+                $result['rh'] = new CBVSViewRendererHelper($dispatchInfo['serviceController']->getCleanMessages());
                 
                 // Write Service Controller, Controller and Models states
                 $dispatchInfo['controller']->write();
@@ -872,26 +883,6 @@ abstract class CBVSPluginBase
         $url = "{$this->urlStyles}/{$stylePath}";
         
         return $url;
-    }
-    
-    /**
-    * put your comment there...
-    * 
-    * @param CBVSPluginBase $module
-    * @return CBVSPluginBase
-    */
-    protected function & useDbTableNames(CBVSPluginBase & $module)
-    {
-        
-        $moduleConfig =& $module->getConfig();
-        $myConfig = $this->getConfig();
-
-        CBVSTableBase::prepareTableNames(
-            $moduleConfig['db']['tablePrefix'],
-            $myConfig['db']['tables']
-        );
-        
-        return $this;
     }
     
     /**

@@ -9,7 +9,8 @@ defined('ABSPATH') or die();
 /**
 * 
 */
-abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
+abstract class CBVSInstallerBase
+extends CBVSStatedObject
 {
 
     /**
@@ -32,7 +33,7 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     * 
     * @var mixed
     */
-    protected $__installers = array();
+    protected $installers = array();
     
     /**
     * put your comment there...
@@ -47,7 +48,17 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     * @var mixed
     */
     protected $installedVersion = null;
-
+    
+    /**
+    * put your comment there...
+    * 
+    * @var mixed
+    */
+    protected $stateVars = array
+    (
+        'installedVersion'
+    );
+    
     /**
     * put your comment there...
     * 
@@ -69,7 +80,7 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     public function getCurrentVersion()
     {
         
-        $currentVersion = end($this->__installers);
+        $currentVersion = end($this->installers);
         
         return $currentVersion;
     }
@@ -103,7 +114,7 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     public function getInstallerIndex($version)
     {
         
-        $index = array_search($version, $this->__installers);
+        $index = array_search($version, $this->installers);
         
         $index = ($index === FALSE) ? 0 : $index;
         
@@ -180,10 +191,10 @@ abstract class CBVSInstallerBase extends CBVSWPOptionsStatedObject
     public function & runInstallers($index)
     {
         
-        for (; $index < count($this->__installers); $index++)
+        for (; $index < count($this->installers); $index++)
         {
             
-            $version = $this->__installers[$index];
+            $version = $this->installers[$index];
             
             $versionName = str_replace(array('.'), '', $version);
             
