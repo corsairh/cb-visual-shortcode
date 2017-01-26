@@ -488,7 +488,7 @@ abstract class CBVSPluginBase
         $localText = __($text, $domain);
         
         // Placholder as all args after excluding domain and text args
-        $args = array_slice(func_get_args(), 2);
+        $args = array_slice(func_get_args(), 1);
         
         if (!empty($args))
         {
