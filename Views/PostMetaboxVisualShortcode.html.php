@@ -11,9 +11,9 @@ defined('ABSPATH') or die();
 
     <div class="cb-visual-shortcode-pm-visualize-block">
     
-        <p><?php CBVSPlugin::_e('Click "Visualize !" Button below to make all -- Textual Shortcodes inside current post editor -- visualized') ?></p>
-        <p><?php CBVSPlugin::_e('After visualize process is finished all shortcodes will be clickable, and then would be possible to edit Shortcode attributes via Web form instead of doing that manually') ?></p>
-        <input id="cb-visual-shortcode-button-visualize" type="button" value="<?php CBVSPlugin::_e('Visualize Shortcodes !') ?>" />    
+        <p><?= $this->__('Click "Visualize !" Button below to make all -- Textual Shortcodes inside current post editor -- visualized') ?></p>
+        <p><?= $this->__('After visualize process is finished all shortcodes will be clickable, and then would be possible to edit Shortcode attributes via Web form instead of doing that manually') ?></p>
+        <input id="cb-visual-shortcode-button-visualize" type="button" value="<?= $this->__('Visualize Shortcodes !') ?>" />    
         
     </div>
 
@@ -25,14 +25,14 @@ defined('ABSPATH') or die();
     
 <?php endif; ?>
 
-<?php ob_start() ?>
+<?php ob_start(); ?>
 
     <template   id="cb-visual-shortcode-shortcode-wrapper-template" 
                 data-expression='<?php echo $visualizedShortcodesExpression; ?>'>
                 
          <template>
          
-            <div class="cb-visual-shortcode-wrapper mceNonEditable"><div class="cb-visual-shortcode-name">%shortcode_name%</div><div class="cb-visual-shortcode-shortcode">%shortcode%</div></div>
+            <div class="cb-visual-shortcode-wrapper mceNonEditable"><div class="cb-visual-shortcode-name">%shortcode_name%</div><div class="cb-visual-shortcode-shortcode" data-attrs="%shortcode_attrs%" data-tag="%shortcode_tag%">%shortcode%</div></div>
             
          </template>
         
@@ -50,5 +50,14 @@ defined('ABSPATH') or die();
     echo $visualizedShortcodeTemplate;
 ?>
 
+    <div id="cb-visual-shortcode-live-simple-form">
+    
+        <ul></ul>
+        <div>
+            <button id="cbvs-simple-form-close"><?= $this->__('Close') ?></button>
+            <button id="cbvs-simple-form-submit"><?= $this->__('Submit') ?></button>        
+        </div>
+
+    </div>
 
 </div>

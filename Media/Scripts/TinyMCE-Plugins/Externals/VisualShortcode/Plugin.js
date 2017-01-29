@@ -29,21 +29,26 @@ tinymce.PluginManager.add("VisualShortcode",
         */
         var CBVisualShortcodePlugin = new function()
         {
-        
+
+            /**
+            * put your comment there...
+            * 
+            * @param event
+            */
+            var _onClickShortcode = function(event)
+            {
+                var element = event.currentTarget;
+                
+                model.displayShortcodeForm($(element));
+            };
+            
             /**
             * put your comment there...
             * 
             */
             var makeVisualizesShortcodesClickable = function(event)
             {
-                
-                editor.$('.cb-visual-shortcode-wrapper').on('click',
-                    
-                    function()
-                    {
-                        model.showParametersForm(event);
-                    }
-                );
+                editor.$('.cb-visual-shortcode-wrapper').on('click', _onClickShortcode);
                 
             };
             /**

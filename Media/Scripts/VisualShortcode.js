@@ -19,6 +19,14 @@ var CBVisualShortcode;
     CBVisualShortcode = function(controller, options)
     {
         
+        /**
+        * put your comment there...
+        * 
+        * @param controller
+        * @param options
+        */
+        var $this = this;
+        
         // Default options
         var opts = $.extend(
             {
@@ -26,6 +34,60 @@ var CBVisualShortcode;
             },
             options
         );
+
+        /**
+        * put your comment there...
+        * 
+        * @param jQElement
+        */
+        var _onSubmitForm = function(event, jQElement)
+        {
+            
+            var formConstructor = jQElement.data('formConstructor');
+            
+            var serializedFields = jQElement[formConstructor]('seriailzeFields')[0];
+            
+            $this.writeShortcodeAttrs(jQElement, serializedFields);
+        };
+        
+        /**
+        * 
+        */
+        this.displayShortcodeForm = function(element)
+        {
+            
+            // Create new Shortcode form
+            // Allow form to be supplied from extensions
+            var eventObject = new function()
+            {
+                
+                /**
+                * 
+                */
+                this.formConstructor = 'CBVSSimpleShortcodeForm';
+                
+            };
+            
+            controller.trigger('FormConstructor', [eventObject]);
+            
+            // Save Form COnstructor used with the element to be used later when serializing shortcode attrs
+            element.data('formConstructor', eventObject.formConstructor);
+            
+            // COnstruct Form
+            element[eventObject.formConstructor]({});
+            
+            element.on('submit', _onSubmitForm);
+            
+            // Read Shortcode form attributes
+            shortcodeAttrs = this.parseShortcodeAttrs(
+                decodeURIComponent(
+                    element.find('.cb-visual-shortcode-shortcode').data('attrs')
+                )
+            );
+            
+            // Display form with attributes
+            element.CBVSSimpleShortcodeForm('show', shortcodeAttrs);
+        };
         
         /**
         * 
@@ -38,17 +100,13 @@ var CBVisualShortcode;
         /**
         * 
         */
-        this.makeVisualizedShortcodesClickable = function()
+        this.parseShortcodeAttrs = function(attrsStr)
         {
             
-            $('.cb-visual-shortcode-wrapper').click(
-                
-                function()
-                {
-                    
-                }
-            );
+            // Parse Shortcode Attrs
+            var attrs = wp.shortcode.attrs(attrsStr);    
             
+            return attrs.named;
         };
         
         /**
@@ -126,6 +184,8 @@ var CBVisualShortcode;
                             shortcode : shortcode,
                             wrapperShortcodeHTML : shortcodeWrapperTag
                                                     .replace('%shortcode_name%', shortcode[2])
+                                                    .replace('%shortcode_attrs%', encodeURIComponent(shortcode[4].trim()))
+                                                    .replace('%shortcode_tag%', shortcode[2])
                                                     .replace('%shortcode%', shortcode[0])
                         }
                     );
@@ -154,6 +214,43 @@ var CBVisualShortcode;
             }
 
             return content;
+            
+        };
+        
+        /**
+        * put your comment there...
+        * 
+        * @param jQElement
+        * @param fields
+        */
+        this.writeShortcodeAttrs = function(jQElement, fields)
+        {
+            // Generate Attrs string
+            var newAttrs = [];
+            var newAttrsStr;
+            
+            $.each(fields,
+            
+                function(name, value)
+                {
+                    newAttrs.push(name + '="' + value + '"');
+                }
+                
+            );
+            
+            newAttrsStr = newAttrs.join(' ');
+            
+            // Replace Shortcode attrs with new attrs 
+            shortcodeElement = jQElement.find('.cb-visual-shortcode-shortcode');
+            
+            var attrsStr = decodeURIComponent(shortcodeElement.data('attrs'));
+            var shortcode = shortcodeElement.html();
+            
+            shortcode = shortcode.replace(attrsStr, newAttrsStr);
+            shortcodeElement.html(shortcode);
+            
+            // Add new attrs signature in place of the old one
+            shortcodeElement.data('attrs', encodeURIComponent(newAttrsStr));
             
         };
         

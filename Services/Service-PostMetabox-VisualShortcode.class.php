@@ -36,12 +36,14 @@ class CBVSServiceDashboardPostMetabox
     public function _enqueueScripts()
     {
         
+        $plugin =& CBVSPlugin::me();
+        
         wp_enqueue_script('jquery-ui-dialog');
         
         // Visual Shortcode Metabox Controller
         wp_enqueue_script(
             'cb-visual-shortcode-visualize-post-metabox-controller',
-            CBVSPlugin::me()->urlScript('PostMetaboxVisualShortcode.js')
+            $plugin->urlScript('PostMetaboxVisualShortcode.js')
         );
         
         wp_localize_script(
@@ -49,7 +51,7 @@ class CBVSServiceDashboardPostMetabox
             'CBPostMetaboxViewVisualShortcodeL10N',
             array
             (
-                'visualizeOnHTMLMode' => CBVSPlugin::__('Message'),
+                'visualizeOnHTMLMode' => $plugin->__('Message'),
             )
         );
         
@@ -59,9 +61,15 @@ class CBVSServiceDashboardPostMetabox
         // Visual Shortcode Metabox Default/Base Model
         wp_enqueue_script(
             'cb-visual-shortcode-visualize-post-metabox-default-model',
-            CBVSPlugin::me()->urlScript('VisualShortcode.js')
+            $plugin->urlScript('VisualShortcode.js')
         );
 
+        // Visual Shortcode Metabox Default/Base Model
+        wp_enqueue_script(
+            'cb-visual-shortcode-visualize-post-metabox-simple-shortcode-form',
+            $plugin->urlScript('ShortcodeSimpleForm.jquery.js')
+        );
+        
         // Extensions Scripts
         CBVSPlugin::hooks()->visualizeMetaboxEnqueueScripts();
     }
@@ -99,6 +107,8 @@ class CBVSServiceDashboardPostMetabox
             (strpos($_SERVER['REQUEST_URI'], 'post-new.php') !== FALSE))
         {
                     
+            $plugin =& CBVSPlugin::me();
+            
             // TinyMCE PLugins
             add_action('mce_external_plugins', array($this, '_tinyMCEExternalPlugins'));
             
@@ -108,12 +118,12 @@ class CBVSServiceDashboardPostMetabox
             // Filter Metabox Parameters
             $metaboxParams = array
             (
-                'title' => CBVSPlugin::__('Visual Shortcodes'),
-                'displayCallback' => array($this, '_display'),
-                'postTypes' => array('post'),
-                'context' => 'side',
-                'priority' => 'high',
-                'callbackArgs' => array
+                'title'             => $plugin->__('Visual Shortcodes'),
+                'displayCallback'   => array($this, '_display'),
+                'postTypes'         => array('post'),
+                'context'           => 'side',
+                'priority'          => 'high',
+                'callbackArgs'      => array
                 (
                     'viewDisplayExtensionsBlock' => true
                 ),
