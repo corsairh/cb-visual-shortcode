@@ -20,6 +20,8 @@ class CBVSPluggable extends CBVSPluggableInterface
     
     const FILTER_VISUALIZE_POST_METABOX_PARAMETERS = 'visualize-post-metabox-parameters';
     const FILTER_VISUALIZE_POST_METABOX_VIEW = 'visualize-post-metabox-view';
+    const FILTER_VISUALIZE_POST_METABOX_VIEW_ATTRS = 'visualize-post-metabox-view-attrs';
+    const FILTER_VISUALIZE_POST_METABOX_VIEW_BELOW = 'visualize-post-metabox-view-below';
     const FILTER_VISUALIZE_POST_METABOX_VIEW_TEMPLATE = 'visualize-post-metabox-view-template';
     const FILTER_VISUALIZE_POST_METABOX_SHORTCODE_WRAPPER_TEMPLATE = 'visualize-post-metabox-shortcode-wrapper-template';
     
@@ -100,6 +102,32 @@ class CBVSPluggable extends CBVSPluggableInterface
     {        
         return $this->addFilter(
             self::FILTER_VISUALIZE_POST_METABOX_VIEW,
+            $callback
+        );
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $callback
+    */
+    public function setVisualizeMetaboxViewAttrs($callback)
+    {        
+        return $this->addFilter(
+            self::FILTER_VISUALIZE_POST_METABOX_VIEW_ATTRS,
+            $callback
+        );
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $callback
+    */
+    public function setVisualizeMetaboxBelowViewBelow($callback)
+    {
+        return $this->addAction(
+            self::FILTER_VISUALIZE_POST_METABOX_VIEW_BELOW,
             $callback
         );
     }
@@ -214,6 +242,39 @@ class CBVSPluggable extends CBVSPluggableInterface
         );
     }
 
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $attrs
+    */
+    public function visualizeMetaboxViewAttrs($attrs)
+    {
+        
+        $attrs = $this->applyFilter(
+            self::FILTER_VISUALIZE_POST_METABOX_VIEW_ATTRS,
+            $attrs
+        );
+        
+        $attrs['class'] = join(' ', $attrs['class']);
+        
+        $attrsPairs = array();
+        foreach ($attrs as $name => $value)
+        {
+            $attrsPairs[] = "{$name}=\"{$value}\"";
+        }
+        
+        return $attrsPairs;
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    */
+    public function visualizeMetaboxViewBelow()
+    {
+        return $this->doAction(self::FILTER_VISUALIZE_POST_METABOX_VIEW_BELOW);
+    }
+    
     /**
     * put your comment there...
     * 

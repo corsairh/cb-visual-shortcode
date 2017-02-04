@@ -51,8 +51,7 @@
             
             btnSubmit = liveFormElement.find('#cbvs-simple-form-submit');
             btnClose = liveFormElement.find('#cbvs-simple-form-close');
-            
-            console.debug('Construct!');
+
         }
         
         /**
@@ -74,17 +73,17 @@
         var _onSubmit = function()
         {
             
-            jQElement.trigger('submit', [jQElement]);
+            jQElement.trigger('submit');
             
             terminate();
             
             return false;
         };
-        
+
         /**
         * 
         */
-        this.show = function(action, shortcodeAttrs)
+        this.show = function(shortcode, shortcodeAttrs)
         {
             
             var fieldsListElement = liveFormElement.find('ul');
@@ -121,7 +120,7 @@
         /**
         * 
         */
-        this.seriailzeFields = function()
+        this.serializeFields = function()
         {
             
             var fields = {};
@@ -208,7 +207,7 @@
                 if (isMethodCall)
                 {
                     
-                    var callReturns = plugin[action].apply(plugin, args);
+                    var callReturns = plugin[action].apply(plugin, $.makeArray(args).slice(1));
                     
                     result.push(callReturns);
                 }

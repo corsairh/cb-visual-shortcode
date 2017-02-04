@@ -6,8 +6,18 @@
 // No direct access
 defined('ABSPATH') or die();
 
+// Filter Metabox attributes
+$metaboxAttrs = array
+(
+    'class' => array
+    (
+        'cb-visual-shortcode-post-metabox'
+    )
+);
+
+$metaboxAttrs = CBVSPlugin::hooks()->visualizeMetaboxViewAttrs($metaboxAttrs);
 ?>
-<div class="cb-visual-shortcode-post-metabox">
+<div <?= join(' ', $metaboxAttrs) ?>>
 
     <div class="cb-visual-shortcode-pm-visualize-block">
     

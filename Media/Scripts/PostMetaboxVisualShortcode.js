@@ -120,6 +120,14 @@ var CBPostMetaboxViewVisualShortcode;
         /**
         * 
         */
+        this.getDataAttr = function(name)
+        {
+            return metaboxElement.find('.cb-visual-shortcode-post-metabox').data(name);
+        };
+        
+        /**
+        * 
+        */
         this.getEditor = function()
         {
             
@@ -316,6 +324,8 @@ var CBPostMetaboxViewVisualShortcode;
                 // Init Event
                 this.trigger('Init', [this]);
                 
+                // Global event
+                $(document).trigger('VisualShortcodeControllerInit', [this]);
             }
         , this));
         

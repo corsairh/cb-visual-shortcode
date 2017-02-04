@@ -40,14 +40,16 @@ var CBVisualShortcode;
         * 
         * @param jQElement
         */
-        var _onSubmitForm = function(event, jQElement)
+        var _onSubmitForm = function(event)
         {
             
-            var formConstructor = jQElement.data('formConstructor');
+            var element = $(event.target);
             
-            var serializedFields = jQElement[formConstructor]('seriailzeFields')[0];
+            var formConstructor = element.data('formConstructor');
             
-            $this.writeShortcodeAttrs(jQElement, serializedFields);
+            var serializedFields = element[formConstructor]('serializeFields')[0];
+            
+            $this.writeShortcodeAttrs(element, serializedFields);
         };
         
         /**
@@ -79,14 +81,20 @@ var CBVisualShortcode;
             element.on('submit', _onSubmitForm);
             
             // Read Shortcode form attributes
+            var shortcodeElement = element.find('.cb-visual-shortcode-shortcode');
+            
             shortcodeAttrs = this.parseShortcodeAttrs(
                 decodeURIComponent(
-                    element.find('.cb-visual-shortcode-shortcode').data('attrs')
+                    shortcodeElement.data('attrs')
                 )
             );
             
             // Display form with attributes
-            element.CBVSSimpleShortcodeForm('show', shortcodeAttrs);
+            element[eventObject.formConstructor](
+                'show',
+                shortcodeElement.data('tag'),
+                shortcodeAttrs
+            );
         };
         
         /**

@@ -2,3 +2,13 @@
 {
     display: none;
 }
+
+
+/* Fix  Shortcode Dialog */
+.ui-dialog.ui-widget.ui-widget-content.ui-corner-all.ui-front.ui-draggable.ui-resizable {
+    z-index: 100000;
+}
+
+.ui-widget-overlay {
+    z-index: 99999;
+}

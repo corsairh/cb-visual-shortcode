@@ -10,6 +10,7 @@ defined('ABSPATH') or die();
 * 
 */
 abstract class CBVSStatedObject
+extends CBVSObject
 {
     
     const STORAGE_WP_CUSTOM = 'custom';

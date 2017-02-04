@@ -188,6 +188,10 @@ class CBVSServiceDashboardPostMetabox
         $form = CBVSPlugin::hooks()->visualizeMetaboxViewTemplate($form);
         
         echo $form;
+        
+        // After Metabox action
+        CBVSPlugin::hooks()->visualizeMetaboxViewBelow();
+        
     }
 
     /**

@@ -286,7 +286,7 @@ abstract class CBVSPluginBase
         {
             
             // HTTP INternal Server error
-            header('HTTP:1/1 500 Internal Server Error');
+            header('HTTP/1.1: 500 Internal Server Error');
             
             throw $exception;
         }
