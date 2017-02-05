@@ -7,21 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInite99e58b5b04ee2a1d83356311d2f5512
 {
     public static $classMap = array (
-        'CBVSCodeFile' => __DIR__ . '/../..' . '/Library/CodeFile.class.php',
-        'CBVSIStatedObjectStorage' => __DIR__ . '/../..' . '/Library/StatedObjectStorage.interface.php',
         'CBVSInstaller' => __DIR__ . '/../..' . '/Installer/Installer.class.php',
-        'CBVSInstallerBase' => __DIR__ . '/../..' . '/Library/Installer.abstract.php',
-        'CBVSObject' => __DIR__ . '/../..' . '/Library/Object.abstract.php',
         'CBVSPluggable' => __DIR__ . '/../..' . '/Includes/Pluggable.class.php',
-        'CBVSPluggableInterface' => __DIR__ . '/../..' . '/Library/PluggableInterface.abstract.php',
         'CBVSPlugin' => __DIR__ . '/../..' . '/Includes/Plugin.php',
-        'CBVSPluginBase' => __DIR__ . '/../..' . '/Library/PluginBase.abstarct.php',
         'CBVSServiceDashboardPostMetabox' => __DIR__ . '/../..' . '/Services/Service-PostMetabox-VisualShortcode.class.php',
-        'CBVSStatedObject' => __DIR__ . '/../..' . '/Library/StatedObject.abstract.php',
-        'CBVSStatedObjectStorage' => __DIR__ . '/../..' . '/Library/StatedObjectStorage.abstract.php',
-        'CBVSStatedObjectStorageCustom' => __DIR__ . '/../..' . '/Library/StatedObjectCustomStorage.class.php',
-        'CBVSStatedObjectStorageWPNetwork' => __DIR__ . '/../..' . '/Library/StatedObjectWPNetworkStorage.class.php',
-        'CBVSStatedObjectStorageWPOption' => __DIR__ . '/../..' . '/Library/StatedObjectWPOptionStorage.class.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

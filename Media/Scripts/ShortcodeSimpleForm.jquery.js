@@ -108,7 +108,8 @@
             // Display Thickbox form
             liveFormElement.dialog(
                 {
-                    modal : true
+                    modal : true,
+                    draggable : false
                 }
             );
             

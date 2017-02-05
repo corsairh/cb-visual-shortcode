@@ -34,7 +34,7 @@ var CBVisualShortcode;
             },
             options
         );
-
+        
         /**
         * put your comment there...
         * 
@@ -58,6 +58,16 @@ var CBVisualShortcode;
         this.displayShortcodeForm = function(element)
         {
             
+            // Read Shortcode form attributes
+            var shortcodeElement = element.find('.cb-visual-shortcode-shortcode');
+            
+            shortcode = shortcodeElement.data('tag');
+            shortcodeAttrs = this.parseShortcodeAttrs(
+                decodeURIComponent(
+                    shortcodeElement.data('attrs')
+                )
+            );
+            
             // Create new Shortcode form
             // Allow form to be supplied from extensions
             var eventObject = new function()
@@ -67,6 +77,18 @@ var CBVisualShortcode;
                 * 
                 */
                 this.formConstructor = 'CBVSSimpleShortcodeForm';
+                
+                /**
+                * put your comment there...
+                * 
+                */
+                this.shortcode = shortcode;
+                
+                /**
+                * put your comment there...
+                * 
+                */
+                this.shortcodeAttrs = shortcodeAttrs;
                 
             };
             
@@ -80,19 +102,10 @@ var CBVisualShortcode;
             
             element.on('submit', _onSubmitForm);
             
-            // Read Shortcode form attributes
-            var shortcodeElement = element.find('.cb-visual-shortcode-shortcode');
-            
-            shortcodeAttrs = this.parseShortcodeAttrs(
-                decodeURIComponent(
-                    shortcodeElement.data('attrs')
-                )
-            );
-            
             // Display form with attributes
             element[eventObject.formConstructor](
                 'show',
-                shortcodeElement.data('tag'),
+                shortcode,
                 shortcodeAttrs
             );
         };
@@ -103,6 +116,23 @@ var CBVisualShortcode;
         this.getOptions = function()
         {
             return opts;
+        };
+        
+        /**
+        * 
+        */
+        this.switchFormControl = function(element, shortcode, attrs, formConstructor)
+        {
+            
+            if (!formConstructor)
+            {
+                formConstructor = 'CBVSSimpleShortcodeForm';
+            }
+            
+            element[formConstructor]({});
+            element[formConstructor]('show', shortcode, attrs);
+            element.data('formConstructor', formConstructor);
+            
         };
         
         /**
