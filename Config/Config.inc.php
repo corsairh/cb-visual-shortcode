@@ -9,6 +9,7 @@
 return array
 (
 
+    'uninstallable' => true,
     'config' => array
     (
     
