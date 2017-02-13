@@ -26,7 +26,7 @@ class CBVSServiceDashboardPostMetabox
     public function __construct()
     {
         // Add metabox
-        add_action('admin_init', array($this, '_define'));
+        add_action('add_meta_boxes', array($this, '_define'));
     }
     
     /**
@@ -94,60 +94,59 @@ class CBVSServiceDashboardPostMetabox
         // Extensions Styles
         CBVSPlugin::hooks()->visualizeMetaboxEnqueueStyles();
     }
-    
+
     /**
     * put your comment there...
     * 
+    * @param mixed $postType
     */
-    public function _define()
+    public function _define($postType)
     {
-        
-        // Add Metabox only if in edit/add post page
-        if ((strpos($_SERVER['REQUEST_URI'], 'post.php') !== FALSE) || 
-            (strpos($_SERVER['REQUEST_URI'], 'post-new.php') !== FALSE))
-        {
-                    
-            $plugin =& CBVSPlugin::me();
-            
-            // TinyMCE PLugins
-            add_action('mce_external_plugins', array($this, '_tinyMCEExternalPlugins'));
-            
-            // TinMCE Styles
-            add_filter('mce_css', array($this, '_tinyMCEStyles'));
-        
-            // Filter Metabox Parameters
-            $metaboxParams = array
-            (
-                'title'             => $plugin->__('Visual Shortcodes'),
-                'displayCallback'   => array($this, '_display'),
-                'postTypes'         => array('post'),
-                'context'           => 'side',
-                'priority'          => 'high',
-                'callbackArgs'      => array
-                (
-                    'viewDisplayExtensionsBlock' => true
-                ),
-            );
-            
-            $metaboxParams = CBVSPlugin::hooks()->getVisualizeMetaboxParameters($metaboxParams);
-            
-            // Add metabox for every post type
-            foreach ($metaboxParams['postTypes'] as $postType)
-            {
-                add_meta_box(
-                    'cb-visual-shortcode',
-                    $metaboxParams['title'],
-                    $metaboxParams['displayCallback'],
-                    $postType,
-                    $metaboxParams['context'],
-                    $metaboxParams['priority'],
-                    $metaboxParams['callbackArgs']
-                );
-            }
 
-            add_action('admin_enqueue_scripts', array($this, '_enqueueScripts'));
-            add_action('admin_print_styles', array($this, '_enqueueStyles'));
+        $plugin =& CBVSPlugin::me();
+    
+        // Filter Metabox Parameters
+        $metaboxParams = array
+        (
+            'title'             => $plugin->__('Visual Shortcodes'),
+            'displayCallback'   => array($this, '_display'),
+            'postTypes'         => array('post'),
+            'context'           => 'side',
+            'priority'          => 'high',
+            'callbackArgs'      => array
+            (
+                'viewDisplayExtensionsBlock' => true
+            ),
+        );
+        
+        $metaboxParams = CBVSPlugin::hooks()->getVisualizeMetaboxParameters($metaboxParams);
+        
+        // Don't process until Post Type is configured to have Visual Shortcode Metabox
+        
+        if (!in_array($postType, $metaboxParams['postTypes']))
+        {
+            return;
         }
+        
+        add_meta_box(
+            'cb-visual-shortcode',
+            $metaboxParams['title'],
+            $metaboxParams['displayCallback'],
+            $postType,
+            $metaboxParams['context'],
+            $metaboxParams['priority'],
+            $metaboxParams['callbackArgs']
+        );
+            
+        // TinyMCE PLugins
+        add_action('mce_external_plugins', array($this, '_tinyMCEExternalPlugins'));
+        
+        // TinMCE Styles
+        add_filter('mce_css', array($this, '_tinyMCEStyles'));
+
+        // Enqueue scripts and styles
+        add_action('admin_enqueue_scripts', array($this, '_enqueueScripts'));
+        add_action('admin_print_styles', array($this, '_enqueueStyles'));
         
     }
 
