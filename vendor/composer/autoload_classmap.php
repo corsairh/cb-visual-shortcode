@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CBVSInstaller' => $baseDir . '/Installer/Installer.class.php',
+    'CBVSPAddons' => $baseDir . '/Includes/Addons.class.php',
     'CBVSPluggable' => $baseDir . '/Includes/Pluggable.class.php',
-    'CBVSPlugin' => $baseDir . '/Includes/Plugin.php',
     'CBVSServiceDashboardPostMetabox' => $baseDir . '/Services/Service-PostMetabox-VisualShortcode.class.php',
 );

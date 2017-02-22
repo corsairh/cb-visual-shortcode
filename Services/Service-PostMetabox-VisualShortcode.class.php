@@ -9,7 +9,7 @@ defined('ABSPATH') or die();
 /**
 * 
 */
-class CBVSServiceDashboardPostMetabox
+final class CBVSServiceDashboardPostMetabox
 {
     
     /**
@@ -111,7 +111,7 @@ class CBVSServiceDashboardPostMetabox
             'title'             => $plugin->__('Visual Shortcodes'),
             'displayCallback'   => array($this, '_display'),
             'postTypes'         => array('post'),
-            'context'           => 'side',
+            'context'           => 'normal',
             'priority'          => 'high',
             'callbackArgs'      => array
             (
@@ -177,6 +177,9 @@ class CBVSServiceDashboardPostMetabox
         
         // Display all defined blocks
         $view['args']['visualizedShortcodesExpression'] = $visualizedShortcodesExpression;
+        
+        // Get Addons List
+        $view['args']['extra']['addons'] = CBVSPAddons::createNamedInstance('ins')->addons();
         
         $form = CBVSPlugin::me()->renderView(
             $view['template'],

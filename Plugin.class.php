@@ -9,9 +9,10 @@ defined('ABSPATH') or die();
 /**
 * 
 */
-class CBVSPlugin extends CBVSPluginBase
+class CBVSPlugin
+extends CBVSPluginBase
 {
-    
+
     /**
     * put your comment there...
     * 
@@ -50,7 +51,9 @@ class CBVSPlugin extends CBVSPluginBase
         if (is_admin())
         {
             // Post metabox
-            CBVSServiceDashboardPostMetabox::run();
+            $this->defineServicesController(
+                'CBVSServiceDashboardPostMetabox'
+            );
         }
         
     }

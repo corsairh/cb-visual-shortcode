@@ -14,11 +14,21 @@
 defined('ABSPATH') or die();
 
 # Autoload
-require 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'Autoload.php';
 
 // Plug
 CBVSPlugin::plug(
+
     __FILE__,
-    require  __DIR__ . DIRECTORY_SEPARATOR .
-            'Config' . DIRECTORY_SEPARATOR . 'Config.inc.php'
+    
+    CBVSPlugin::envLoadConfig(
+    
+        /* Env Config */
+        require __DIR__ . DIRECTORY_SEPARATOR .
+                'Config' . DIRECTORY_SEPARATOR . 'Config.php',
+        
+        /* Config */
+        __DIR__ . DIRECTORY_SEPARATOR .
+        'Config' . DIRECTORY_SEPARATOR . 'Plugin.%ext%.php'    
+    )
 );

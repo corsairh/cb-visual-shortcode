@@ -8,8 +8,8 @@ class ComposerStaticInite99e58b5b04ee2a1d83356311d2f5512
 {
     public static $classMap = array (
         'CBVSInstaller' => __DIR__ . '/../..' . '/Installer/Installer.class.php',
+        'CBVSPAddons' => __DIR__ . '/../..' . '/Includes/Addons.class.php',
         'CBVSPluggable' => __DIR__ . '/../..' . '/Includes/Pluggable.class.php',
-        'CBVSPlugin' => __DIR__ . '/../..' . '/Includes/Plugin.php',
         'CBVSServiceDashboardPostMetabox' => __DIR__ . '/../..' . '/Services/Service-PostMetabox-VisualShortcode.class.php',
     );
 

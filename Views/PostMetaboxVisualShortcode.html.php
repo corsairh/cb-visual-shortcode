@@ -30,7 +30,16 @@ $metaboxAttrs = CBVSPlugin::hooks()->visualizeMetaboxViewAttrs($metaboxAttrs);
 <?php if ($viewDisplayExtensionsBlock) : ?>
 
     <div class="cb-visual-shortcode-pm-get-pro-block">
-        <p>Download XXX</p>
+        <strong><?= $this->__('Extend Visual Shortcode') ?></strong>
+        <ul class="addons">
+<?php foreach ($extra['addons'] as $addon) : ?>
+            <li>
+                <a target="_blank" href="<?= $addon['link'] ?>"><?= $addon['title'] ?></a>
+                <br>
+                <span><?= $addon['description'] ?></span>
+            </li>
+<?php endforeach; ?>
+        </ul>
     </div>
     
 <?php endif; ?>
