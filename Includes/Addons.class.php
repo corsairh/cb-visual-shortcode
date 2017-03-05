@@ -41,15 +41,16 @@ extends CBVSObject
         
         // Try to get from transient, if not transient or expired
         // get from server
-        $this->addons = get_transient($this->transient);
+        $this->addons = get_transient($this->transient);        
         
         if (!$this->addons)
         {
             
             $plugin =& CBVSPlugin::me();
                     
-            $config = $plugin->getConfigSection('config');
-            $addonsConfig =& $config['visualShortcode']['store']['apiAddons'];
+            $config = $plugin->getConfigSection('plugin');
+
+            $addonsConfig =& $config['store']['apiAddons'];
             $addonsUri = $addonsConfig['url'];
 
             $this->addons = array();

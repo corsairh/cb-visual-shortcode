@@ -19,14 +19,47 @@ return array
         (
             CBVSPluginBase::ENV_STATE_DEV => array
             (
-                'extension' => 'dev'
+                'config' => __DIR__ . DIRECTORY_SEPARATOR . 'Plugin.dev.php',
             ),
             
             CBVSPluginBase::ENV_STATE_PRO => array
             (
-                'extension' => 'inc'
+                'config' => __DIR__ . DIRECTORY_SEPARATOR . 'Plugin.inc.php',
             )
             
         )
-    )
+    ),
+    
+    'uninstallable' => true,
+    'config' => array
+    (
+    
+        'local' => array
+        (
+            'textDomain' => 'cb-visual-shortcode',
+            'dir' => 'Languages',
+        ),
+        
+        'slugNamespace' => 'cbvs',
+    ),
+    
+    'installer' => 'CBVSInstaller',
+    
+    'view' => array
+    (
+    
+        'extension' => 'html.php',
+        
+        'views' => array
+        (
+            'VisualShortcodeMetabox' => 'Views/PostMetaboxVisualShortcode',
+        )
+        
+    ),
+    
+    'resource' => array
+    (
+        'scriptsPath' => 'Media/Scripts',
+        'stylesPath' => 'Media/Styles',
+    ),
 );

@@ -3,44 +3,26 @@
 * 
 */
 
+defined('ABSPATH') or die(-1);
+
 /**
 * 
 */
 return array
 (
 
-    'uninstallable' => true,
-    'config' => array
+    'plugin' => array
     (
     
-        'local' => array
+        'store' => array
         (
-            'textDomain' => 'cb-visual-shortcode',
-            'dir' => 'Languages',
+            'apiEndPoint' => 'http://cbspoint.com/cbstore',
+            'apiAddons' => array
+            (
+                'url' => 'http://cbspoint.com/plugins/visual-shortcode-community-edition/feed/?items=addons',
+                'expires' => 864000, /* Retrieve Every Ten days */
+            ),
         ),
-        
-        'slugNamespace' => 'cbvs',
-        
-    ),
-    
-    'installer' => 'CBVSInstaller',
-    
-    'view' => array
-    (
-    
-        'extension' => 'html.php',
-        
-        'views' => array
-        (
-            'VisualShortcodeMetabox' => 'Views/PostMetaboxVisualShortcode'
-        )
-        
-    ),
-    
-    'resource' => array
-    (
-        'scriptsPath' => 'Media/Scripts',
-        'stylesPath' => 'Media/Styles',
-    ),
 
+    )
 );
