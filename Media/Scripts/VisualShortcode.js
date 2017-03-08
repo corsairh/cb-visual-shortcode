@@ -177,10 +177,10 @@ var CBVisualShortcode;
                 var visualizedShortcode;
                 var index = 0;
                 
-                for (; index < visualizedShortcodes.length ; index++)
+                for (; index < visualizedShortcodes.length; index++)
                 {
                     
-                    visualizedShortcode = visualizedShortcode = visualizedShortcodes[index];
+                    visualizedShortcode = visualizedShortcodes[index];
                     
                     // disacrd visualized shortcode
                     if ((shortcode.index > visualizedShortcode.startOffset) && 
@@ -288,7 +288,8 @@ var CBVisualShortcode;
             shortcodeElement.html(shortcode);
             
             // Add new attrs signature in place of the old one
-            shortcodeElement.data('attrs', encodeURIComponent(newAttrsStr));
+            var newEncodedAttrs = encodeURIComponent(newAttrsStr);
+            shortcodeElement.data('attrs', newEncodedAttrs).attr('data-attrs', newEncodedAttrs);
             
         };
         

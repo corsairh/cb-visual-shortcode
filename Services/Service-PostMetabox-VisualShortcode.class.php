@@ -160,7 +160,7 @@ final class CBVSServiceDashboardPostMetabox
     {
         
         // Filter visuaizxed shortcode expression
-        $visualizedShortcodesExpression = '\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-wrapper\x20+mceNonEditable\"\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-name\"\x20*\>[\s\na-zA-Z0-9]+\<\/div\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-shortcode\"\x20*\>(%SHORTCODE_EXPRESSION%)\<\/div\x20*\>[\s\n]*\<\/div\x20*\>';
+        $visualizedShortcodesExpression = '\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-wrapper\x20+mceNonEditable\"\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-name\"\x20*\>[\s\na-zA-Z0-9]+\<\/div\x20*\>[\s\n]*\<div\x20+class\x20*\=\x20*\"cb-visual-shortcode-shortcode\"[^\>]*\>(%SHORTCODE_EXPRESSION%)\<\/div\x20*\>[\s\n]*\<\/div\x20*\>';
         
         $visualizedShortcodesExpression = CBVSPlugin::hooks()->visualizedShortcodesExpression(
             $visualizedShortcodesExpression
