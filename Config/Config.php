@@ -20,11 +20,13 @@ return array
             CBVSPluginBase::ENV_STATE_DEV => array
             (
                 'config' => __DIR__ . DIRECTORY_SEPARATOR . 'Plugin.dev.php',
+                'development' => true,
             ),
             
             CBVSPluginBase::ENV_STATE_PRO => array
             (
                 'config' => __DIR__ . DIRECTORY_SEPARATOR . 'Plugin.inc.php',
+                'development' => false,
             )
             
         )

@@ -61,7 +61,7 @@
         var _onClose = function()
         {
             
-            terminate();
+            close();
             
             return false;
         };
@@ -75,11 +75,16 @@
             
             jQElement.trigger('submit');
             
-            terminate();
+            close();
             
             return false;
         };
 
+        var close = function()
+        {
+            liveFormElement.dialog('close');
+        }
+        
         /**
         * 
         */
@@ -109,7 +114,10 @@
             liveFormElement.dialog(
                 {
                     modal : true,
-                    draggable : false
+                    draggable : false,
+                    close : terminate,
+                    closeOnEscape : false,
+                    maxHeight : 200
                 }
             );
             
@@ -146,10 +154,10 @@
         var terminate = function()
         {
             
+            console.log('terminae');
+            
             btnSubmit.unbind('click.shortcodeForm');
             btnClose.unbind('click.shortcodeForm');
-            
-            liveFormElement.dialog('close');
             
             jQElement.data('__CBVSSimpleShortcodeForm__', null);
             

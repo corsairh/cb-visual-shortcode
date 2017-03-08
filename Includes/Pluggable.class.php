@@ -74,7 +74,7 @@ class CBVSPluggable extends CBVSPluggableInterface
     */
     public function setVisualizeMetaboxModel($callback)
     {        
-        return $this->addFilter(
+        return $this->addAction(
             self::ACTION_VISUALIZE_POST_METABOX_ENQUEUE_MODEL, 
             $callback
         );
@@ -126,8 +126,21 @@ class CBVSPluggable extends CBVSPluggableInterface
     */
     public function setVisualizeMetaboxBelowViewBelow($callback)
     {
-        return $this->addAction(
+        return $this->addFilter(
             self::FILTER_VISUALIZE_POST_METABOX_VIEW_BELOW,
+            $callback
+        );
+    }
+    
+    /**
+    * put your comment there...
+    * 
+    * @param mixed $callback
+    */
+    public function setVisualizeMetaboxEnqueueStyle($callback)
+    {
+        return $this->addAction(
+            self::ACTION_VISUALIZE_POST_METABOX_ENQUEUE_STYLES,
             $callback
         );
     }
