@@ -27,6 +27,24 @@ var CBVisualShortcode;
         */
         var $this = this;
         
+        /**
+        * put your comment there...
+        * 
+        */
+        var shortcodeAttrs;
+        
+        /**
+        * put your comment there...
+        * 
+        */
+        var shortcodeAttrsStr;
+        
+        /**
+        * put your comment there...
+        * 
+        */
+        var shortcodeTag;
+        
         // Default options
         var opts = $.extend(
             {
@@ -61,12 +79,14 @@ var CBVisualShortcode;
             // Read Shortcode form attributes
             var shortcodeElement = element.find('.cb-visual-shortcode-shortcode');
             
-            shortcode = shortcodeElement.data('tag');
-            shortcodeAttrs = this.parseShortcodeAttrs(
-                decodeURIComponent(
-                    shortcodeElement.data('attrs')
-                )
-            );
+            // Parse Shortcode to get Tag and Attributes
+            var shortcodeExpression = controller.getShortcodeTagsExpression();
+            
+            var shortcode = shortcodeElement.html().match(new RegExp(shortcodeExpression.source));
+            
+            shortcodeTag = shortcode[2];
+            shortcodeAttrsStr = shortcode[4].trim();
+            shortcodeAttrs = $this.parseShortcodeAttrs(shortcodeAttrsStr);
             
             // Create new Shortcode form
             // Allow form to be supplied from extensions
@@ -82,7 +102,7 @@ var CBVisualShortcode;
                 * put your comment there...
                 * 
                 */
-                this.shortcode = shortcode;
+                this.shortcode = shortcodeTag;
                 
                 /**
                 * put your comment there...
@@ -105,7 +125,7 @@ var CBVisualShortcode;
             // Display form with attributes
             element[eventObject.formConstructor](
                 'show',
-                shortcode,
+                shortcodeTag,
                 shortcodeAttrs
             );
         };
@@ -222,8 +242,6 @@ var CBVisualShortcode;
                             shortcode : shortcode,
                             wrapperShortcodeHTML : shortcodeWrapperTag
                                                     .replace('%shortcode_name%', shortcode[2])
-                                                    .replace('%shortcode_attrs%', encodeURIComponent(shortcode[4].trim()))
-                                                    .replace('%shortcode_tag%', shortcode[2])
                                                     .replace('%shortcode%', shortcode[0])
                         }
                     );
@@ -263,6 +281,7 @@ var CBVisualShortcode;
         */
         this.writeShortcodeAttrs = function(jQElement, fields)
         {
+            
             // Generate Attrs string
             var newAttrs = [];
             var newAttrsStr;
@@ -281,16 +300,10 @@ var CBVisualShortcode;
             // Replace Shortcode attrs with new attrs 
             shortcodeElement = jQElement.find('.cb-visual-shortcode-shortcode');
             
-            var attrsStr = decodeURIComponent(shortcodeElement.data('attrs'));
-            var shortcode = shortcodeElement.html();
+            var shortcodeText = shortcodeElement.html();
             
-            shortcode = shortcode.replace(attrsStr, newAttrsStr);
-            shortcodeElement.html(shortcode);
-            
-            // Add new attrs signature in place of the old one
-            var newEncodedAttrs = encodeURIComponent(newAttrsStr);
-            shortcodeElement.data('attrs', newEncodedAttrs).attr('data-attrs', newEncodedAttrs);
-            
+            shortcodeText = shortcodeText.replace(shortcodeAttrsStr, newAttrsStr);
+            shortcodeElement.html(shortcodeText);
         };
         
     };

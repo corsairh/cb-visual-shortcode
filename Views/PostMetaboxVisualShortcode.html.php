@@ -51,7 +51,7 @@ $metaboxAttrs = CBVSPlugin::hooks()->visualizeMetaboxViewAttrs($metaboxAttrs);
                 
          <template>
          
-            <div class="cb-visual-shortcode-wrapper mceNonEditable"><div class="cb-visual-shortcode-name">%shortcode_name%</div><div class="cb-visual-shortcode-shortcode" data-attrs="%shortcode_attrs%" data-tag="%shortcode_tag%">%shortcode%</div></div>
+            <div class="cb-visual-shortcode-wrapper mceNonEditable"><div class="cb-visual-shortcode-name">%shortcode_name%</div><div class="cb-visual-shortcode-shortcode">%shortcode%</div></div>
             
          </template>
         
