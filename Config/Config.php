@@ -14,18 +14,26 @@ return array
     (
     
         'state' => CBVSPluginBase::ENV_STATE_DEV,
-         
+        'configsDir' => 'Config',
+        
         'states' => array
         (
+
             CBVSPluginBase::ENV_STATE_DEV => array
             (
-                'config' => __DIR__ . DIRECTORY_SEPARATOR . 'Plugin.dev.php',
+                'config' => 'Plugin.dev.php',
+                'development' => true,
+            ),
+                    
+            CBVSPluginBase::ENV_STATE_PRE_PRO => array
+            (
+                'config' => 'Plugin.pre-pro.php',
                 'development' => true,
             ),
             
             CBVSPluginBase::ENV_STATE_PRO => array
             (
-                'config' => __DIR__ . DIRECTORY_SEPARATOR . 'Plugin.inc.php',
+                'config' => 'Plugin.inc.php',
                 'development' => false,
             )
             

@@ -22,13 +22,8 @@ CBVSPlugin::plug(
     __FILE__,
     
     CBVSPlugin::envLoadConfig(
-    
-        /* Env Config */
+        __DIR__,
         require __DIR__ . DIRECTORY_SEPARATOR .
-                'Config' . DIRECTORY_SEPARATOR . 'Config.php',
-        
-        /* Config */
-        __DIR__ . DIRECTORY_SEPARATOR .
-        'Config' . DIRECTORY_SEPARATOR . 'Plugin.%ext%.php'    
+                'Config' . DIRECTORY_SEPARATOR . 'Config.php'
     )
 );
