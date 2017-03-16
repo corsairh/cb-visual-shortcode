@@ -48,7 +48,7 @@ extends CBVSObject
             
             $plugin =& CBVSPlugin::me();
                     
-            $config = $plugin->getConfigSection('plugin');
+            $config = $plugin->getPluginConfig();
 
             $addonsConfig =& $config['store']['apiAddons'];
             $addonsUri = $addonsConfig['url'];
