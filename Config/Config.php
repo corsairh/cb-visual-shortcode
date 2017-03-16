@@ -42,7 +42,7 @@ return array
         )
     ),
     
-    'uninstallable' => true,
+    'uninstallable' => false,
     'config' => array
     (
     
