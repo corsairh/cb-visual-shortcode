@@ -1,13 +1,26 @@
 <?php
 /**
 * Plugin Name: CB Visual Shortcode
-* Description: Turns textual Wordpress Post Shortcodes into Visual Shortcode, allow users to change shortcode attributes with using simple web form
-* Version: 0.5.0
+* Description: Modify Shortcode attributes using web form
+* Version: 1.0.0
 * Author: AHMeD SAiD
-* Author URI: http://github.com/xpointer
-* Plugin URI: http://ec2-54-200-243-228.us-west-2.compute.amazonaws.com/cb-vs
+* Author URI: http://www.cbspoint.com
+* Plugin URI: http://www.cbspoint.com/plugins/visual-shortcode-community-edition/
 * Text Domain: cb-visual-shortcode
 * License: GPL2
+
+    CB Visual Shortcode is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 2 of the License, or
+    any later version.
+     
+    CB Visual Shortcode is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+     
+    You should have received a copy of the GNU General Public License
+    along with CB Visual Shortcode.
 */
 
 // No direct access
