@@ -24,9 +24,20 @@
 */
 
 // No direct access
-defined('ABSPATH') or die();
+defined('ABSPATH') or die(-1);
 
-# Autoload
+##################### Compatibility Check #####################
+
+require dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Services' .
+        DIRECTORY_SEPARATOR . 'Core-CompatibilityCheck.class.php';
+        
+if (!CBVSServiceControllerCoreSCC::check()->isCompatible())
+{
+    return;
+}
+        
+############# Autoload and Start The Plugin ##################
+
 require __DIR__ . DIRECTORY_SEPARATOR . 'Autoload.php';
 
 // Plug
@@ -40,3 +51,5 @@ CBVSPlugin::plug(
                 'Config' . DIRECTORY_SEPARATOR . 'Config.php'
     )
 );
+
+##############################################################
