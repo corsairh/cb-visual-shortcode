@@ -15,7 +15,7 @@ return array
     
         'state' =>  getenv('cb-visual-shortcode-dev-status') ?
                     getenv('cb-visual-shortcode-dev-status') :
-                    CBStorePlugin::ENV_STATE_PRO,
+                    CBVSPluginBase::ENV_STATE_PRO,
         'configsDir' => 'Config',
         
         'states' => array
