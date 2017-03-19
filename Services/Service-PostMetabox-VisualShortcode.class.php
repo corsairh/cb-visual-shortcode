@@ -179,7 +179,17 @@ final class CBVSServiceDashboardPostMetabox
         $view['args']['visualizedShortcodesExpression'] = $visualizedShortcodesExpression;
         
         // Get Addons List
-        $view['args']['extra']['addons'] = CBVSPAddons::createNamedInstance('ins')->addons();
+        try
+        {
+            $view['args']['extra']['addons'] = CBVSPAddons::createNamedInstance('ins')->addons();    
+        }
+        catch (Exception $exception)
+        {
+            
+            // In case of error fetching feeds sliently wait for another try and
+            // don't display addons for now
+            $view['args']['viewDisplayExtensionsBlock'] = false;
+        }
         
         $form = CBVSPlugin::me()->renderView(
             $view['template'],

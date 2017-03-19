@@ -57,29 +57,32 @@ extends CBVSObject
             
             $response = wp_remote_get($addonsUri);
             
-            if (!($response instanceof WP_Error))
+            if (($response instanceof WP_Error) ||
+                (wp_remote_retrieve_response_code($response) != 200))
+            {
+                throw new Exception('Could not fetch addons feed!!');
+            }
+                            
+            $feed = wp_remote_retrieve_body($response);
+            $feedXML = new SimpleXMLElement($feed);
+
+            $props = array('title', 'link', 'description');
+            
+            foreach ($feedXML->channel->item as $item)
             {
                 
-                $feed = wp_remote_retrieve_body($response);
-                $feedXML = new SimpleXMLElement($feed);
-
-                $props = array('title', 'link', 'description');
+                $addon = array();
                 
-                foreach ($feedXML->channel->item as $item)
+                foreach ($props as $name)
                 {
-                    
-                    $addon = array();
-                    
-                    foreach ($props as $name)
-                    {
-                        $addon[$name] = (string) $item->$name;
-                    }
-                    
-                    $this->addons[] = $addon;
+                    $addon[$name] = (string) $item->$name;
                 }
                 
-                set_transient($this->transient, $this->addons, $addonsConfig['expires']);
+                $this->addons[] = $addon;
             }
+            
+            set_transient($this->transient, $this->addons, $addonsConfig['expires']);
+                
         }
 
         return $this->addons;
