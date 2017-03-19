@@ -23,6 +23,9 @@ Clicking on the Visualized Shortcodes make it easy to modify Shortcode attribute
 * Support Switch between Text and Visual Editors
 * Shortcode attributes may be updated manually after shortcode visualized
 
+= Note =
+This Plugin will display empty dialog for Shortcodes those don't have attributes yet. You must have Shortcode Attributes typed before displaying the form so that The Plugin knows how to create Shortcode Form. If you like to have Your Shortcode Defined and the forms as well you can purchase [Advanced Visual Shortcode Extension Plugin](http://www.cbspoint.com/plugins/advanced-visual-shortcode/)
+
 = Need More Features ? =
 [Advanced Visual Shortcode Extension Plugin](http://www.cbspoint.com/plugins/advanced-visual-shortcode/) comes along with many features, check out he list below:
 
@@ -74,9 +77,9 @@ Clicking on the Visualized Shortcodes make it easy to modify Shortcode attribute
 * No! However, [Advanced Visual Shortcode Extension Plugin](http://www.cbspoint.com/plugins/advanced-visual-shortcode/) do that and the list will be even grow by the time!
 
 == Screenshots ==
-1. 
-2. 
-3. 
+1. Visualize Shortcode Edit Post Level Metabox Toolbox
+2. Visualize Shortcodes
+3. Shortcode form
 
 
 == Changelog ==
