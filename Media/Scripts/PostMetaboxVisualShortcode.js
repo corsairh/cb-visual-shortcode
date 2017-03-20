@@ -259,7 +259,7 @@ var CBPostMetaboxViewVisualShortcode;
                 // Get Shortcode wrapper code  and Expression, from template tag
                 var visualizedShortcodeTemplate = $('#cb-visual-shortcode-shortcode-wrapper-template');
                 
-                shortcodeTagExpr = wp.shortcode.regexp('([a-zA-Z0-9_]+)');
+                shortcodeTagExpr = wp.shortcode.regexp('([a-zA-Z0-9_\-]+)');
 
                 shortcodeWrapperTag = $(visualizedShortcodeTemplate.get(0).content).find('>template').html().trim();
                 

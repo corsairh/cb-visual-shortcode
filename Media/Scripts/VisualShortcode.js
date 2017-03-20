@@ -26,24 +26,18 @@ var CBVisualShortcode;
         * @param options
         */
         var $this = this;
+                
+        /**
+        * put your comment there...
+        * 
+        */
+        var shortcode;
         
         /**
         * put your comment there...
         * 
         */
         var shortcodeAttrs;
-        
-        /**
-        * put your comment there...
-        * 
-        */
-        var shortcodeAttrsStr;
-        
-        /**
-        * put your comment there...
-        * 
-        */
-        var shortcodeTag;
         
         // Default options
         var opts = $.extend(
@@ -82,11 +76,22 @@ var CBVisualShortcode;
             // Parse Shortcode to get Tag and Attributes
             var shortcodeExpression = controller.getShortcodeTagsExpression();
             
-            var shortcode = shortcodeElement.html().match(new RegExp(shortcodeExpression.source));
+            shortcode = shortcodeElement.html().match(new RegExp(shortcodeExpression.source));
+
+            // As we will join Shortcode segments later when form submitted
+            // we don't need to render "undefined" values, set all undefined values to empty string
+            // so it print nothing
+            for (var seg in shortcode)
+            {
+                if (shortcode[seg] === undefined)
+                {
+                    shortcode[seg] = '';
+                }
+            }
             
-            shortcodeTag = shortcode[2];
-            shortcodeAttrsStr = shortcode[4].trim();
-            shortcodeAttrs = $this.parseShortcodeAttrs(shortcodeAttrsStr);
+            var shortcodeTag = shortcode[2];
+            
+            shortcodeAttrs = $this.parseShortcodeAttrs(shortcode[4].trim());
             
             // Create new Shortcode form
             // Allow form to be supplied from extensions
@@ -300,10 +305,9 @@ var CBVisualShortcode;
             // Replace Shortcode attrs with new attrs 
             shortcodeElement = jQElement.find('.cb-visual-shortcode-shortcode');
             
-            var shortcodeText = shortcodeElement.html();
+            var newShortcode = '[' + shortcode[2] + ' ' + newAttrsStr + shortcode[5] + ']' + shortcode[6] + shortcode[7];
             
-            shortcodeText = shortcodeText.replace(shortcodeAttrsStr, newAttrsStr);
-            shortcodeElement.html(shortcodeText);
+            shortcodeElement.html(newShortcode);
         };
         
     };
