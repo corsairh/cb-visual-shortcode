@@ -8,12 +8,11 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Turns textual Wordpress Post Shortcodes into Visual Shortcode, prrovide web form for changing attributes value
+Turns textual Wordpress Post Shortcodes into Visual Shortcode, provide web form for changing attributes value
 
 == Description ==
 
-Visual Shortcode Plugin make it easy to convert Post Shortcodes into Visual Elements, that can be clicked.
-Clicking on the Visualized Shortcodes make it easy to modify Shortcode attributes through simple Web Form.
+Convert Post Shortcodes into Visual Clickable Elements. Provide a simple web form for modifying Shortcode attributes by just clicking on the visual shortcodes.
 
 = Features =
 * Turns Shortcode texts into Visual Elements
