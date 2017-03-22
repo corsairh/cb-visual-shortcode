@@ -21,7 +21,7 @@ final class CBVSServiceControllerCoreSCC
     /**
     * 
     */
-    private $phpVersion = '5.3';
+    private $phpVersion = '5.5';
     
     /**
     * put your comment there...
