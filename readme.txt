@@ -14,11 +14,27 @@ Turns textual Wordpress Post Shortcodes into Visual Shortcode, provide web form 
 
 Convert Post Shortcodes into Visual Clickable Elements. Provide a simple web form for modifying Shortcode attributes by just clicking on the visual shortcodes.
 
+Shortcode is one of the very important features introduced in Wordpress platform. Shortcode is a WordPress-specific code that lets you do nifty things with very little effort. Shortcodes can embed files or create objects that would normally require lots of complicated, ugly code in just one line. Shortcode = shortcut
+
+The only problem is dealing with Shortcode via raw text editor. Editing Shortcode with text editor would required a little efforts. Visual Shortcode Plugin rule is to simplify shortcode editing process by allow editing Shortcode attributes through simple web form
+
+Visual Shortcode form is very simple and consist only from Text Fields however more fields might be configured for the Shortcode by installing [Advanced Visual Shortcode Extension Plugin](http://www.cbspoint.com/plugins/advanced-visual-shortcode/) Extension.
+
+Once Shortcode Visual Element is clicked a Shortcode form will be pop-up allowing editing Shortcode attributes very easy without any manual editing for Shortcode attributes
+
+Shortcode content, those data between the open and close Shortcode tags, is currently not allowed to be edited. Only Shortcode attributes can be edited.
+
+Shortcode still can be edited manually or via Visual Shortcode clickable element, however make sure to don't change Visual Shortcode HTML wrapped signature to avoid Visual Shortcode plugin from visualizing your element twice as this would lead to unpredicatble behavior that prevent you from editing Shortcode attribute via web form.
+
+Creating Visual Shortcodes must be done manually by clicking on Visualize Shortcode button. Visualizing Shortcode automaticlly is considered as [Advanced Visual Shortcode Extension Plugin](http://www.cbspoint.com/plugins/advanced-visual-shortcode/) feature to be added later.
+
+[Advanced Visual Shortcode Extension Plugin](http://www.cbspoint.com/plugins/advanced-visual-shortcode/) make it even eaiser by allowing of defining Shortcode and its attributes so you don't need to rememebder Shortcode attributes everytime you want to edit Shortcode Attributes. Its also allow many Creating Different field type for every Shortcode Attribute.
+
 = Features =
 * Turns Shortcode texts into Visual Elements
 * Modify Shortcode attributes using Web Form
-* All attributes are represted as input text field
-* Visualize each post Shrtcodes manually by single button click
+* All Shortcode attributes are represted as input text field
+* Visualize each post Shortcodes manually by single button click
 * Support Switch between Text and Visual Editors
 * Shortcode attributes may be updated manually after shortcode visualized
 
